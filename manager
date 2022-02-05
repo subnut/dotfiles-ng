@@ -1,0 +1,48 @@
+#!/bin/sh
+[ $# -eq 0 ] && exit
+cd "$(dirname "$0")"
+
+if [ "$1" = "dry_${1#dry_}" ]
+then run() { printf '%s\n' "$*"; }
+else run() { printf '%s\n' "$*"; "$@"; }
+fi
+
+_save() {
+    [ -d home ] || mkdir home
+    run cp ~/.shrc      home
+    run cp ~/.zshrc     home
+    run cp ~/.vimrc     home
+    run cp ~/.profile   home
+    run cp ~/.gitconfig home
+
+    [ -d home/.ssh ] || mkdir home/.ssh
+    run cp -R ~/.ssh/config     home/.ssh
+
+    [ -d home/.config ] || mkdir home/.config
+    run cp -R ~/.config/fontconfig  home/.config
+    run cp -R ~/.config/foot        home/.config
+    run cp -R ~/.config/htop        home/.config
+    run cp -R ~/.config/lf          home/.config
+    run cp -R ~/.config/sway        home/.config
+
+    # glirc config password check
+    if grep -q 'sasl|password' ~/.config/glirc/config
+    then echo >&2 'Password in ~/.config/glirc/config'
+         echo >&2 'Not copying'
+    else run cp -R ~/.config/glirc  home/.config
+    fi
+}
+
+_load() {
+    # TODO: Copy the files from this directory to the respective directories.
+    #       Also, check before copying if the file exists already. If yes, show the diff
+    #       to the user and ask if that file should be replaced/backed-up-and-replaced/kept.
+    echo >&2 Not implemented yet
+}
+
+case "${1#dry_}" in
+    (save) _save;;
+    (load) _load;;
+esac
+
+# vim: et ts=4 sts=4 sw=4 ft=sh
