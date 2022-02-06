@@ -5,6 +5,12 @@ alias l='ls -lA'
 alias shrug="printf %s '¯\_(ツ)_/¯'"
 alias exists='command -v >/dev/null'
 
+exists sway && exists jq &&
+    alias swayprop='swaymsg -t get_tree | jq ".. | select(.type?) | select(.focused)"'
+
+exists ssh-agent &&
+    alias withssh='SSH_AUTH_SOCK=$_SSH_AUTH_SOCK SSH_AGENT_PID=$_SSH_AGENT_PID'
+
 exists firefox && {
     export MOZ_ENABLE_WAYLAND=1
     export MOZ_WEBRENDER=1
@@ -56,10 +62,6 @@ exists cal && {
     alias cal='cal -3'
     alias cal1='cal -1'
     alias caly='cal -y'
-}
-exists bat && {
-    export BAT_THEME=ansi
-    export BAT_PAGER='less -RF'
 }
 
 exists batt || alias batt=battery

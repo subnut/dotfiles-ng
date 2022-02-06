@@ -1,0 +1,5 @@
+--wrap never
+--terminal-width +50
+--italic-text always
+--theme ansi
+--pager 'less -RFS'

@@ -1,2 +1,5 @@
 map d delete
 map x cut
+
+cmd exec $lf -remote "send $id quit" && exec "$@"
+map e push :exec<space>
