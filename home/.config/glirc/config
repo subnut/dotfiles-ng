@@ -1,0 +1,40 @@
+activity-bar: yes
+show-ping: yes
+
+nick-padding:
+   side: left -- try right if you don't like left padding
+   width: 20
+
+macros:
+    *   name: "shrug"
+        commands: "say ¯\\_(ツ)_/¯"
+    *   name: "back"
+        commands: "away"
+
+key-bindings:
+    *   bind: "F1"
+        command: "keymap"
+    *   bind: "F2"
+        command: "toggle-detail"
+    *   bind: "F3"
+        command: "toggle-metadata"
+    *   bind: "F4"
+        command: "toggle-activity-bar"
+
+defaults:
+    username:   "subnut"
+    realname:   "Subhaditya Nath"
+
+servers:
+    *   name: "libera"
+        hostname: "irc.libera.chat"
+        nick: "subnut"
+        autoconnect: yes
+        tls: yes
+        connect-cmds:
+            *   "join #glirc"
+            *   "join #libera"
+            *   "join #voidlinux"
+            *   "join ###temp"
+
+-- vim: sw=4 et ts=4 sts=4

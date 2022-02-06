@@ -1,0 +1,113 @@
+export EDITOR=vi
+alias :q=exit
+
+alias l='ls -lA'
+alias shrug="printf %s '¯\_(ツ)_/¯'"
+alias exists='command -v >/dev/null'
+
+exists firefox && {
+    export MOZ_ENABLE_WAYLAND=1
+    export MOZ_WEBRENDER=1
+    export MOZ_ACCELERATED=1
+}
+exists git && {
+    alias g=git
+    alias gst='git status'
+    alias gsw='git switch'
+    alias ga='git add'
+    alias gai='git add -i'
+    alias gaa='git add --all'
+    alias gaav='git add --all --verbose'
+    alias gc='git commit -v'
+    alias gca='git commit -va'
+    gcm()  { git commit -v  -m "$*"; }
+    gcma() { git commit -va -m "$*"; }
+    alias gp='git push'
+    alias gpull='git pull'
+    alias gpfwl='git push --force-with-lease'
+    gpf() {
+        echo >&2 DO NOT USE --force
+        echo >&2 Use --force-with-lease instead
+        return 1
+    }
+    alias gl='git log --oneline --graph'
+    alias glog='git log --stat'
+    alias gd='git diff --patience'
+    alias gds='gd --staged'
+    alias gdh='gd HEAD'
+    alias gdh1='gd HEAD~1 HEAD'
+    ginit() {
+        git init
+        git commit --allow-empty -m 'git init'
+    }
+}
+exists python3 && {
+    alias py=python3
+    [ -f "$HOME/.pythonrc" ] &&
+        export PYTHONSTARTUP="$HOME/.pythonrc"
+}
+exists vim && {
+    export EDITOR=vim
+    export DIFFPROG=vimdiff
+    alias vimtemp='vim +set\ buftype=nowrite'
+    alias vimrc='vim ~/.vimrc'
+}
+exists cal && {
+    alias cal='cal -3'
+    alias cal1='cal -1'
+    alias caly='cal -y'
+}
+exists bat && {
+    export BAT_THEME=ansi
+    export BAT_PAGER='less -RF'
+}
+
+exists batt || alias batt=battery
+battery() {
+    for BAT in /sys/class/power_supply/BAT*
+    do
+        mins=0
+        test $(cat $BAT/power_now) -gt 0 && \
+        mins=$(( $(cat $BAT/energy_now) * 60 / $(cat $BAT/power_now) ))
+        hour=$(( mins / 60 ))
+        mins=$(( mins % 60 ))
+        percent=$(( $(cat $BAT/energy_now) * 100 / $(cat $BAT/energy_full) ))
+        printf '%s: %d%% (%02d:%02d) - %s\n' \
+            ${BAT#/sys/class/power_supply/} \
+            $percent $hour $mins \
+            "$(cat $BAT/status)"
+    done
+}
+
+exists abduco && {
+    alias abduco=abduco_
+    abduco_() {
+		[ $(ps p $(ps p $$ o ppid h) o comm h) = abduco ] && {
+			printf '%s - %s\n' 'WARNING!!! This shell is already running under abduco session' \
+			$(ps p $(ps p $$ o ppid h) o args h | tr ' ' '\n' | tail -n +2 |
+            sed -n '/^-/{h;d;};/^[^-]/{H;g;/^-e/{s/.*//;h;d};s/^[^[:space:]]*[[:space:]]//p;q;}')
+            # The above regex is only valid for the following synopsis -
+            #
+            #   $ abduco -h
+            #   abduco: invalid option -- 'h'
+            #   usage: abduco [-a|-A|-c|-n] [-r] [-l] [-f] [-e detachkey] name command
+            #
+            # Note the fact that `name` is the first argument that -
+            #   * doesn't start with a hyphen
+            #   * wasn't preceded by `-e` (because -e consumes the next argument for itself)
+            #
+            # Also note that the arguments may be in any order, but the `name command [args ...]`
+            # must always come last.
+			echo 'If you somehow accidentally end up attaching to a session from inside that session,'
+			echo 'you will create an infinite loop, inflicting stress on your machine.'
+			printf %s 'Are you sure you want to continue? [y/N] '; read ANSWER
+			if [ ! -z "$ANSWER" ] && printf %s "$ANSWER" | grep -q '^[Yy]'; then :;
+			else return;
+			fi
+		}
+		abduco "$@"
+	}
+}
+
+true
+# vim: et sw=4 sts=4 ts=4 ft=sh
