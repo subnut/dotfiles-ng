@@ -1,5 +1,12 @@
 #!/bin/sh
-[ $# -eq 0 ] && exit
+[ $# -eq 0 ] || [ "$1" = help ] && {
+    NAME="$(basename "$0")"
+    echo "$NAME save -- Save current settings to repo"
+    echo "$NAME load -- Load settings from repo"
+    echo "$NAME help -- Print this help"
+}
+
+[ $# -eq 0 ] && exit 1
 cd "$(dirname "$0")"
 
 if [ "$1" = "dry_${1#dry_}" ]
@@ -19,6 +26,7 @@ _save() {
     run cp -R ~/.ssh/config     home/.ssh
 
     [ -d home/.config ] || mkdir home/.config
+    run cp -R ~/.config/bat         home/.config
     run cp -R ~/.config/fontconfig  home/.config
     run cp -R ~/.config/foot        home/.config
     run cp -R ~/.config/htop        home/.config
