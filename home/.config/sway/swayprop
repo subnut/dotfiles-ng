@@ -1,0 +1,19 @@
+#!/bin/sh
+command -v jq >/dev/null || {
+	echo >&2 jq not found
+	echo >&2 Please install jq before using this utility
+	exit 1
+}
+
+TREE="$(swaymsg -t get_tree)"
+COORDINATES="$(printf '%s\n' "$TREE" |
+	jq -r '.. | select(.pid? and .visible?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"' |
+	slurp -B 00000088 -f '%x,%y')"
+
+EXITCODE=$?
+[ $EXITCODE -eq 0 ] ||
+	exit $EXITCODE
+
+X=${COORDINATES%,*}
+Y=${COORDINATES#*,}
+printf '%s\n' "$TREE" | jq ".. | select(.pid? and .visible?) | select(.rect.x == $X and .rect.y == $Y)"

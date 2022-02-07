@@ -16,6 +16,8 @@ exists zsh &&
     alias zshrc='$EDITOR $HOME/.zshrc'
 exists ssh-agent &&
     alias withssh='SSH_AUTH_SOCK=$_SSH_AUTH_SOCK SSH_AGENT_PID=$_SSH_AGENT_PID'
+exists sway &&
+    alias swayprop="$HOME/.config/sway/swayprop"
 
 exists fzf && {
     export FZF_DEFAULT_OPTS="--ansi \
@@ -36,12 +38,6 @@ exists fzf && {
           fd --hidden --follow --exclude ".git" . "$1"
         }
     }
-}
-exists sway && {
-    if exists jq
-    then alias swayprop='swaymsg -t get_tree | jq ".. | select(.type?) | select(.focused)"'
-    else alias swayprop='echo jq not found; echo Install jq to use this command;'
-    fi
 }
 exists firefox && {
     export MOZ_ENABLE_WAYLAND=1
