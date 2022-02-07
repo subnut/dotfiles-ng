@@ -8,10 +8,22 @@
 }
 
 cd "$(dirname "$0")"
+touch stdout stderr; chmod 0600 stdout stderr
+trap 'rm stdout stderr' EXIT INT HUP TERM
 
 if [ "$1" = "dry_${1#dry_}" ]
 then run() { printf '%s\n' "$*"; }
-else run() { printf '%s ... ' "$*"; "$@"; if [ $? -eq 0 ]; then echo success; else echo FAIL; fi; }
+else
+    run() {
+        printf '[    ] %s' "$*"
+        "$@" 1>stdout 2>stderr
+        if [ $? -eq 0 ]; then
+            printf '\033['$(( ${#*} + 6 ))'D\033[32m%s\033[m\n' ' OK '
+        else
+            printf '\033['$(( ${#*} + 6 ))'D\033[1;91m%s\033[m\n' 'FAIL'
+            cat stderr
+        fi
+    }
 fi
 
 _save() {
