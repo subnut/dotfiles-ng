@@ -18,8 +18,10 @@ else
         printf '[    ] %s' "$*"
         "$@" 1>stdout 2>stderr
         if [ $? -eq 0 ]; then
+            # 32 = foreground green (color 2)
             printf '\033['$(( ${#*} + 6 ))'D\033[32m%s\033[m\n' ' OK '
         else
+            # 1 = bold; 91 = foreground bright red; 31 = foreground red (color 1)
             printf '\033['$(( ${#*} + 6 ))'D\033[1;91m%s\033[m\n' 'FAIL'
             cat stderr
         fi
@@ -35,10 +37,10 @@ _save() {
     run cp ~/.vimrc     home
     run cp ~/.profile   home
     run cp ~/.gitconfig home
+    run cp -R ~/.zsh    home
 
     run mkdir                   home/.ssh
     run cp -R ~/.ssh/config     home/.ssh
-    run cp -R ~/.ssh/askpass.sh home/.ssh
 
     run mkdir                       home/.config
     run cp -R ~/.config/bat         home/.config
