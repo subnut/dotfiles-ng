@@ -11,21 +11,24 @@ cd "$(dirname "$0")"
 
 if [ "$1" = "dry_${1#dry_}" ]
 then run() { printf '%s\n' "$*"; }
-else run() { printf '%s\n' "$*"; "$@"; }
+else run() { printf '%s ... ' "$*"; "$@"; if [ $? -eq 0 ]; then echo success; else echo FAIL; fi; }
 fi
 
 _save() {
-    [ -d home ] || mkdir home
+    rm -rf home
+
+    mkdir               home
     run cp ~/.shrc      home
     run cp ~/.zshrc     home
     run cp ~/.vimrc     home
     run cp ~/.profile   home
     run cp ~/.gitconfig home
 
-    [ -d home/.ssh ] || mkdir home/.ssh
+    mkdir                       home/.ssh
     run cp -R ~/.ssh/config     home/.ssh
+    run cp -R ~/.ssh/askpass.sh home/.ssh
 
-    [ -d home/.config ] || mkdir home/.config
+    mkdir                           home/.config
     run cp -R ~/.config/bat         home/.config
     run cp -R ~/.config/fontconfig  home/.config
     run cp -R ~/.config/foot        home/.config
