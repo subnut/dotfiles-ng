@@ -5,11 +5,13 @@
 # Read `man 5 sway` for a complete reference.
 
 ### Startup stuff?
-exec_always exec foot --server
-exec_always pgrep wlsunset       || exec wlsunset -l 26.1 -L 91.7
-exec_always pgrep pipewire       || exec pipewire
-exec_always pgrep pipewire-pulse || exec pipewire-pulse
-exec_always pgrep wireplumber    || exec wireplumber
+exec_always {
+    exec foot --server
+    pgrep wlsunset       || exec wlsunset -l 26.1 -L 91.7
+    pgrep pipewire       || exec pipewire
+    pgrep pipewire-pulse || exec pipewire-pulse
+    pgrep wireplumber    || exec wireplumber
+}
 
 ### Variables
 #
@@ -375,7 +377,12 @@ bar {
 #
 # Window rules
 #
-#for_window
+for_window {
+    [app_id="zenity"] {
+        floating enable
+        sticky enable
+    }
+}
 
 
 # vim:nowrap:et:ts=4:sw=4:sts=0:

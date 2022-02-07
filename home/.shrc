@@ -5,12 +5,17 @@ alias l='ls -lA'
 alias shrug="printf %s '¯\_(ツ)_/¯'"
 alias exists='command -v >/dev/null'
 
-exists sway && exists jq &&
-    alias swayprop='swaymsg -t get_tree | jq ".. | select(.type?) | select(.focused)"'
-
-exists ssh-agent &&
-    alias withssh='SSH_AUTH_SOCK=$_SSH_AUTH_SOCK SSH_AGENT_PID=$_SSH_AGENT_PID'
-
+exists sway && {
+    if exists jq
+    then alias swayprop='swaymsg -t get_tree | jq ".. | select(.type?) | select(.focused)"'
+    else alias swayprop='echo jq not found; echo Install jq to use this command;'
+    fi
+}
+exists ssh-agent && {
+    exists zenity || echo 'zenity not found -- ssh-agent disabled'
+    exists zenity && [ "${SSH_AUTH_SOCK:-0}" = 0 ] &&
+        echo 'zenity installed. Please relogin to enable ssh-agent'
+}
 exists firefox && {
     export MOZ_ENABLE_WAYLAND=1
     export MOZ_WEBRENDER=1
