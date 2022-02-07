@@ -32,7 +32,6 @@ typeset -ga pre{cmd,exec}_functions
 
 
 ## PATH
-export PATH=$HOME/.local/bin:$PATH
 export PATH=./:$PATH
 typeset -U PATH path    # remove duplicates
 
