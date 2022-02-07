@@ -45,19 +45,8 @@ preexec_functions+=title_preexec
 
 ## Other config files
 export ZDOTDIR=${ZDOTDIR-$HOME}
-source $ZDOTDIR/.zsh/misc.zsh
 source $ZDOTDIR/.zsh/prompt.zsh
 source $ZDOTDIR/.zsh/keybindings.zsh
-
-
-## Config files corresponding to the commands ...
-() {
-    local command; for command in "$@"; do
-        (( ${+commands[$command]} )) && [[ -f $ZDOTDIR/.zsh/${command}.zsh ]] &&
-        source $ZDOTDIR/.zsh/${command}.zsh
-    done
-} fzf pacman
-# ... mentioned in the previous line
 
 
 ## oh-my-zsh scripts

@@ -12,10 +12,31 @@ echo ":$PATH:" | grep -Fq ":$HOME/.local/bin" ||
 
 exists yt-dlp &&
     alias yt-dlp='yt-dlp -N 8'
-
+exists zsh &&
+    alias zshrc='$EDITOR $HOME/.zshrc'
 exists ssh-agent &&
     alias withssh='SSH_AUTH_SOCK=$_SSH_AUTH_SOCK SSH_AGENT_PID=$_SSH_AGENT_PID'
 
+exists fzf && {
+    export FZF_DEFAULT_OPTS="--ansi \
+    --color light \
+    --preview-window 'right:60%:hidden:wrap' \
+    --bind ctrl-v:toggle-preview \
+    --margin 1,2"
+    exists fd && {
+        # Use fd to generate the list for directory completion
+        _fzf_compgen_dir() {
+          fd --type d --hidden --follow --exclude ".git" . "$1"
+        }
+        # Use fd (https://github.com/sharkdp/fd) instead of the default find
+        # command for listing path candidates.
+        # - The first argument to the function ($1) is the base path to start traversal
+        # - See the source code (completion.{bash,zsh}) for the details.
+        _fzf_compgen_path() {
+          fd --hidden --follow --exclude ".git" . "$1"
+        }
+    }
+}
 exists sway && {
     if exists jq
     then alias swayprop='swaymsg -t get_tree | jq ".. | select(.type?) | select(.focused)"'
