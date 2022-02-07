@@ -4,9 +4,9 @@
     echo "$NAME save -- Save current settings to repo"
     echo "$NAME load -- Load settings from repo"
     echo "$NAME help -- Print this help"
+    [ $# -gt 0 ]; exit $?   # Clever, isn't it?
 }
 
-[ $# -eq 0 ] && exit 1
 cd "$(dirname "$0")"
 
 if [ "$1" = "dry_${1#dry_}" ]
@@ -15,20 +15,20 @@ else run() { printf '%s ... ' "$*"; "$@"; if [ $? -eq 0 ]; then echo success; el
 fi
 
 _save() {
-    rm -rf home
+    run rm -rf home
 
-    mkdir               home
+    run mkdir           home
     run cp ~/.shrc      home
     run cp ~/.zshrc     home
     run cp ~/.vimrc     home
     run cp ~/.profile   home
     run cp ~/.gitconfig home
 
-    mkdir                       home/.ssh
+    run mkdir                   home/.ssh
     run cp -R ~/.ssh/config     home/.ssh
     run cp -R ~/.ssh/askpass.sh home/.ssh
 
-    mkdir                           home/.config
+    run mkdir                       home/.config
     run cp -R ~/.config/bat         home/.config
     run cp -R ~/.config/fontconfig  home/.config
     run cp -R ~/.config/foot        home/.config
@@ -54,6 +54,9 @@ _load() {
 case "${1#dry_}" in
     (save) _save;;
     (load) _load;;
+    (*) echo "Invalid command -- $1"
+        echo "Run \"$(basename "$0") help\" for help"
+        exit 1;;
 esac
 
 # vim: et ts=4 sts=4 sw=4 ft=sh
