@@ -40,7 +40,6 @@ exists fzf && {
     }
 }
 exists firefox && {
-    export MOZ_ENABLE_WAYLAND=1
     export MOZ_WEBRENDER=1
     export MOZ_ACCELERATED=1
 }
@@ -66,6 +65,7 @@ exists git && {
     }
     alias gl='git log --oneline --graph'
     alias glog='git log --stat'
+    alias glog1='git log --stat -1'
     alias gd='git diff --patience'
     alias gds='gd --staged'
     alias gdh='gd HEAD'

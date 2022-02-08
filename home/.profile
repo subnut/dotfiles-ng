@@ -15,6 +15,9 @@ exists ssh-agent && {
 if exists sway; then
   printf '%s' 'Run Sway? [Y/n] '; read ANSWER
   if [ -z "$ANSWER" ] || printf '%s' "$ANSWER" | grep -q '^[Yy]'; then
+    export GDK_BACKEND=wayland
+    exists firefox &&
+      export MOZ_ENABLE_WAYLAND=1
     if exists dbus-run-session
       then dbus-run-session sway
       else sway
