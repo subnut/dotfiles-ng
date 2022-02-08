@@ -1,31 +1,41 @@
 #!/bin/sh
+[ -t 1 ] && {
+    export CSI="$(printf '\033')["
+    export RESET="${CSI}m"
+    export BOLD="${CSI}1m"
+    export FG_GREEN="${CSI}32m"
+    export FG_RED="${CSI}31m"
+    export FG_RED_B="${CSI}91m" # Bright
+}
+
 [ $# -eq 0 ] || [ "$1" = help ] && {
     NAME="$(basename "$0")"
-    echo "$NAME save -- Save current settings to repo"
-    echo "$NAME load -- Load settings from repo"
-    echo "$NAME help -- Print this help"
+    echo "${NAME} ${BOLD}save${RESET} -- Save current settings to repo"
+    echo "${NAME} ${BOLD}load${RESET} -- Load settings from repo"
+    echo "${NAME} ${BOLD}help${RESET} -- Print this help"
     [ $# -gt 0 ]; exit $?   # Clever, isn't it?
 }
 
 cd "$(dirname "$0")"
 touch stdout stderr; chmod 0600 stdout stderr
-trap 'rm stdout stderr' EXIT INT HUP TERM
+trap 'rm -f stdout stderr' EXIT INT HUP TERM
 
 if [ "$1" = "dry_${1#dry_}" ]
 then run() { printf '%s\n' "$*"; }
 else
-    run() {
-        printf '[    ] %s' "$*"
-        "$@" 1>stdout 2>stderr
-        if [ $? -eq 0 ]; then
-            # 32 = foreground green (color 2)
-            printf '\033['$(( ${#*} + 6 ))'D\033[32m%s\033[m\n' ' OK '
-        else
-            # 1 = bold; 91 = foreground bright red; 31 = foreground red (color 1)
-            printf '\033['$(( ${#*} + 6 ))'D\033[1;91m%s\033[m\n' 'FAIL'
-            cat stderr
-        fi
-    }
+    if [ ! -t 1 ]
+    then run() { printf '%s\n' "$*"; "$@"; }
+    else run() {
+            printf '[    ] %s' "$*"
+            "$@" 1>stdout 2>stderr
+            if [ $? -eq 0 ]; then
+                printf "${CSI}$(( ${#*} + 6 ))D${FG_GREEN} %s ${RESET}"'\n' OK
+            else
+                printf "${CSI}$(( ${#*} + 6 ))D${BOLD}${FG_RED_B}%s${RESET}"'\n' FAIL
+                cat stderr
+            fi
+        }
+    fi
 fi
 
 _save() {
