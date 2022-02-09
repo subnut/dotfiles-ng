@@ -1,0 +1,9 @@
+ignore-empty-password
+disable-caps-lock-text
+color=00000088
+indicator-idle-visible
+indicator-radius=100
+inside-color=dddddd
+line-uses-inside
+ring-color=dddddd
+separator-color=dddddd

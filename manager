@@ -59,6 +59,7 @@ _save() {
     run cp -R ~/.config/htop        home/.config
     run cp -R ~/.config/lf          home/.config
     run cp -R ~/.config/sway        home/.config
+    run cp -R ~/.config/swaylock    home/.config
 
     # glirc config password check
     if grep -q 'sasl|password' ~/.config/glirc/config
@@ -66,6 +67,21 @@ _save() {
          echo >&2 'Not copying'
     else run cp -R ~/.config/glirc  home/.config
     fi
+
+    run rm -rf root
+    run mkdir  root
+
+    run mkdir               root/etc
+    run cp /etc/doas.conf   root/etc
+
+    run mkdir                       root/etc/tlp.d
+    run cp -R /etc/tlp.d/BAT0.conf  root/etc/tlp.d
+
+    run mkdir                   root/etc/acpi
+    run cp /etc/acpi/handler.sh root/etc/acpi
+
+    run mkdir                           root/etc/sudoers.d
+    run cp /etc/sudoers.d/allow_wheel   root/etc/sudoers.d
 }
 
 _load() {
