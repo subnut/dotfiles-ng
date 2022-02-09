@@ -25,27 +25,43 @@ window#waybar {
 /* Paddings */
 #battery,
 #mode,
-#clock  { padding: 0 0.3em; }
+#clock  { padding: 0 0.4em; }
 #workspaces button  { padding: 0 0.15em; }
 
 #clock.time {
-  font-size: 22px;
+  font-size: 20px;
   background: #fd0;
+  color: black;
+  padding: 0 0.3em;
+}
+#clock.date {
+  background: #f90;
   color: black;
 }
 
+#battery {
+  color: #000000;
+  background-color: #ffffff;
+}
+#battery.full     { background-color: #0f8; }
+#battery.good     { background-color: #4e0; }
+#battery.low      { background-color: #e84; }
+#battery.warning  { background-color: #f50; }
+#battery.critical { background-color: #f00; }
+#battery.charging { background-color: #0ff; }
 
 #mode {
   background: #900000;
 }
 #workspaces button {
-  color: #888;
+  color: #ddd;
 }
 #workspaces button.visible {
   color: #fff;
 }
 #workspaces button.focused {  /* XXX: focused or current_output ?*/
-  background: #285577;
+  background: #ec0;
+  color: black;
 }
 #workspaces button.urgent {
   background: #900000;

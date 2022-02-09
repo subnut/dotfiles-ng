@@ -36,6 +36,9 @@ titlebar_padding 5 1
 titlebar_border_thickness 0
 # font monospace 12
 font Recursive Sn Csl St 12
+client.focused #eecc00 #eecc00 #000000
+client.focused_inactive #cc5500 #cc5500 #000000
+client.unfocused #333333 #222222 #dddddd
 
 ### Configuration
 xwayland disable

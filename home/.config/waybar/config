@@ -25,5 +25,18 @@
   "clock#date": {
     "format": "{:%a, %d %b}",
     "tooltip": false
+  },
+  "battery": {
+    "format": "{capacity}% <small>({time})</small>",
+    "format-time": "{H}h {M}m",
+    "full-at": 80,
+    "tooltip": false,
+    "states": {
+      "full": 80,
+      "good": 70,
+      "low": 45,
+      "warning": 30,
+      "critical": 15
+    }
   }
 }
