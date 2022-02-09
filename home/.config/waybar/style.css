@@ -23,6 +23,7 @@ window#waybar {
 }
 
 /* Paddings */
+#idle_inhibitor,
 #battery,
 #mode,
 #clock  { padding: 0 0.4em; }
@@ -50,9 +51,19 @@ window#waybar {
 #battery.critical { background-color: #f00; }
 #battery.charging { background-color: #0ff; }
 
+#idle_inhibitor {
+  background: #386;
+  color: black;
+}
+#idle_inhibitor.activated {
+  background: red;
+  color: black;
+}
+
 #mode {
   background: #900000;
 }
+
 #workspaces button {
   color: #ddd;
 }

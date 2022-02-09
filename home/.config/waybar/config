@@ -1,4 +1,4 @@
-// vim: nowrap et ts=2 sts=2 sw=2 ft=jsonc
+// Fontawesome is required for icons
 {
   "ipc": true,
   "modules-left": [
@@ -6,6 +6,7 @@
     "sway/mode"
   ],
   "modules-right": [
+    "idle_inhibitor",
     "battery",
     "clock#date",
     "clock#time"
@@ -18,7 +19,6 @@
   },
   "clock#time": {
     "format": "{:%H:%M}",
-    // "tooltip-format": "<tt>{calendar}</tt>",
     "tooltip-format": "<span font_family=\"Recursive Mn Csl St\">{calendar}</span>",
     "today-format": "<span background=\"white\" color=\"black\"><b>{}</b></span>"
   },
@@ -27,9 +27,12 @@
     "tooltip": false
   },
   "battery": {
-    "format": "{capacity}% <small>({time})</small>",
+    "format": "{capacity}%",
+    "format-discharging": "{capacity}% <small>({time})</small>",
+    // "format-charging": "{capacity}% <small>({time})</small> ",
+    "format-charging": "{capacity}% <small>({time})</small> ",
     "format-time": "{H}h {M}m",
-    "full-at": 80,
+    // "full-at": 80,
     "tooltip": false,
     "states": {
       "full": 80,
@@ -38,5 +41,13 @@
       "warning": 30,
       "critical": 15
     }
+  },
+  "idle_inhibitor": {
+    "format": "{icon}",
+    "format-icons": {
+      "activated": "",
+      "deactivated": ""
+    }
   }
 }
+// vim: nowrap et ts=2 sts=2 sw=2 ft=jsonc
