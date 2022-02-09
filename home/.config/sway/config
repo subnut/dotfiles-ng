@@ -51,7 +51,7 @@ output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 #   output HDMI-A-1 resolution 1920x1080 position 1920,0
 #
 # You can get the names of your outputs by running: swaymsg -t get_outputs
-output eDP-1 scale 1.25
+output eDP-1 scale 1.3
 output "BenQ Corporation BenQ GW2480 ETA6L00444SL0" scale 1.1
 
 ### Idle configuration
@@ -301,24 +301,28 @@ bindsym $mod+Ctrl+Shift+Right  move workspace to output right
 # Status Bar:
 # Read `man 5 sway-bar` for more information about this section.
 #
+#bar {
+#    position top
+#    wrap_scroll yes
+#    # font monospace 12
+#    font 'Recursive Sn Csl St' 12
+#
+#    # When the status_command prints a new line to stdout, swaybar updates.
+#    # The default just shows the current date and time.
+#    # status_command while date +'%Y-%m-%d %l:%M %p'; do sleep 1; done
+#    status_command while date +'%a, %d %b%t%H:%M'; do sleep $(( 60 - `date +%S` )); done
+#
+#    colors {
+#        statusline #ffffff
+#        background #222222
+#        active_workspace   #5f676a #5f676a #ffffff
+#        inactive_workspace #222222 #222222 #888888
+#        focused_workspace  #285577 #285577 #ffffff
+#    }
+#}
 bar {
-    position top
-    wrap_scroll yes
-    # font monospace 12
-    font 'Recursive Sn Csl St' 12
-
-    # When the status_command prints a new line to stdout, swaybar updates.
-    # The default just shows the current date and time.
-    # status_command while date +'%Y-%m-%d %l:%M %p'; do sleep 1; done
-    status_command while date +'%a, %d %b%t%H:%M'; do sleep $(( 60 - `date +%S` )); done
-
-    colors {
-        statusline #ffffff
-        background #222222
-        active_workspace   #5f676a #5f676a #ffffff
-        inactive_workspace #222222 #222222 #888888
-        focused_workspace  #285577 #285577 #ffffff
-    }
+    id waybar
+    swaybar_command waybar
 }
 
 
@@ -326,6 +330,7 @@ bar {
 # Window rules
 #
 for_window {
+    [app_id="pavucontrol"] floating enable
     [app_id="firefox" title="Firefox — Sharing Indicator"] floating enable
     [app_id="firefox" title="Picture-in-Picture"] {
         floating enable

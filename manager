@@ -60,6 +60,8 @@ _save() {
     run cp -R ~/.config/lf          home/.config
     run cp -R ~/.config/sway        home/.config
     run cp -R ~/.config/swaylock    home/.config
+    run cp -R ~/.config/waybar      home/.config
+    run cp -R ~/.config/zathura     home/.config
 
     # glirc config password check
     if grep -q 'sasl|password' ~/.config/glirc/config

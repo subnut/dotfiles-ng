@@ -1,0 +1,54 @@
+/* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
+#workspaces button:hover {
+  box-shadow: inherit;
+  text-shadow: inherit;
+}
+#workspaces button:hover {
+  background: inherit;
+  border: inherit;
+}
+
+
+* {
+  font-family: 'Recursive Sn Csl St';
+  font-size: 16px;
+  border-radius: 0;
+  border-width: 0;
+  padding: 0;
+  margin: 0;
+}
+window#waybar {
+  background: #222;
+  color: white;
+}
+
+/* Paddings */
+#battery,
+#mode,
+#clock  { padding: 0 0.3em; }
+#workspaces button  { padding: 0 0.15em; }
+
+#clock.time {
+  font-size: 22px;
+  background: #fd0;
+  color: black;
+}
+
+
+#mode {
+  background: #900000;
+}
+#workspaces button {
+  color: #888;
+}
+#workspaces button.visible {
+  color: #fff;
+}
+#workspaces button.focused {  /* XXX: focused or current_output ?*/
+  background: #285577;
+}
+#workspaces button.urgent {
+  background: #900000;
+}
+
+/* vim: set et ts=2 sw=2 sts=2: */

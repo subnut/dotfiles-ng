@@ -1,0 +1,29 @@
+// vim: nowrap et ts=2 sts=2 sw=2 ft=jsonc
+{
+  "ipc": true,
+  "modules-left": [
+    "sway/workspaces",
+    "sway/mode"
+  ],
+  "modules-right": [
+    "battery",
+    "clock#date",
+    "clock#time"
+  ],
+  "sway/workspaces": {
+    "disable-scroll": true
+  },
+  "sway/mode": {
+    "tooltip": false
+  },
+  "clock#time": {
+    "format": "{:%H:%M}",
+    // "tooltip-format": "<tt>{calendar}</tt>",
+    "tooltip-format": "<span font_family=\"Recursive Mn Csl St\">{calendar}</span>",
+    "today-format": "<span background=\"white\" color=\"black\"><b>{}</b></span>"
+  },
+  "clock#date": {
+    "format": "{:%a, %d %b}",
+    "tooltip": false
+  }
+}

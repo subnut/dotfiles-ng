@@ -1,0 +1,17 @@
+# set font "monospace normal 22"
+# set font "'Recursive Sans Casual Static' normal 24"
+# set font "'Recursive Sn Csl St Lt' bold 24"
+set font "'Recursive Sn Csl St Lt' bold 14"
+set open-first-page true
+set adjust-open width
+set dbus-service false
+set filemonitor noop
+set page-padding 1
+set window-title-page true
+set window-title-basename true
+set statusbar-home-tilde true
+set incremental-search true
+set scrollbar-bg rgba(0,0,0,0)
+set guioptions vh
+
+# vim: ft=conf
