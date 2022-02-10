@@ -30,7 +30,7 @@
   },
   "battery": {
     // "full-at": 80,   // Might scare ya
-    // "format-charging": "{capacity}% <small>({time})</small> ",
+    "format-not": " {capacity}%",  // "Not charging" -> "not"
     "format-charging": "{capacity}% <small>({time})</small> ",
     "format-discharging": "{capacity}% <small>({time})</small>",
     "format-time": "{H}h {M}m",

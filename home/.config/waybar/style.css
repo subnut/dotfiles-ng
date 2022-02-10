@@ -96,10 +96,11 @@ window#waybar {
   color: #ddd;
 }
 #workspaces button.visible {
-  color: #fff;
+  background: #c50;
+  color: black;
 }
 #workspaces button.focused {  /* XXX: focused or current_output ?*/
-  background: #ec0;
+  background: #fd0;
   color: black;
 }
 #workspaces button.urgent {
