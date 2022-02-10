@@ -222,7 +222,7 @@ bindsym XF86AudioMicMute     exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
 
     # Move focus to the parent container
     bindsym $mod+p focus parent
-    bindsym $mod+Shift+p focus child
+    bindsym $mod+n focus child
 #
 # Scratchpad:
 #
