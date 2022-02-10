@@ -72,7 +72,7 @@ source $ZDOTDIR/.zsh/OMZ_snippets/clipboard.zsh
         case ${#words} in
             (2) compadd 'search'
                 compadd ${${(Mk)commands%xbps-*}#xbps-};;
-            (*) words=("xbps-${words[2]}" "${(@)words[3,-1]}"); service=${words[1]}; CURRENT=2
+            (*) words=("xbps-${words[2]}" "${(@)words[3,-1]}"); service=${words[1]}; CURRENT=$(( CURRENT - 1 ))
                 _xbps "$@";;
         esac
     }
