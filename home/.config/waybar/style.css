@@ -48,7 +48,7 @@ window#waybar {
   color: black;
 }
 #pulseaudio.muted {
-  background: #F88;
+  background: #F66;
 }
 
 #pulseaudio.mic {
@@ -56,7 +56,7 @@ window#waybar {
   color: black;
 }
 #pulseaudio.mic.source-muted {
-  background: #F66;
+  background: #F44;
 }
 
 #battery {
