@@ -64,18 +64,23 @@ window#waybar {
   background-color: #ffffff;
 }
 #battery.full     { background-color: #0f8; }
-#battery.good     { background-color: #4e0; }
-#battery.low      { background-color: #e84; }
+#battery.good     { background-color: #6f3; }
+#battery.okay     { background-color: #ee8; }
+#battery.low      { background-color: #f77; }
 #battery.warning  { background-color: #f50; }
 #battery.critical { background-color: #f00; }
-#battery.charging { background-color: #0ff; }
+#battery.low      { font-size: 1.15em; }
+#battery.warning  { font-size: 1.35em; }
+#battery.critical { font-size: 1.65em; }
+#battery.critical { font-weight: bolder; }
+#battery.charging { background-color: #0ff; } /* Keep at end to override the above */
 
 #clock.date {
   background: #f90;
   color: black;
 }
 #clock.time {
-  font-size: 20px;
+  font-size: 1.25em;
   background: #fd0;
   color: black;
 }

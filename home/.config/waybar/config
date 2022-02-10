@@ -39,8 +39,9 @@
     "states": {
       "full": 80,
       "good": 70,
+      "okay": 55,
       "low": 45,
-      "warning": 30,
+      "warning": 35,
       "critical": 15
     }
   },
