@@ -22,22 +22,41 @@ window#waybar {
   color: white;
 }
 
+
 /* Paddings */
 #idle_inhibitor,
+#pulseaudio,
 #battery,
 #mode,
-#clock  { padding: 0 0.4em; }
+#clock              { padding: 0 0.4em;  }
+#clock.time         { padding: 0 0.3em;  }
 #workspaces button  { padding: 0 0.15em; }
 
-#clock.time {
-  font-size: 20px;
-  background: #fd0;
+
+/* Right modules */
+#idle_inhibitor {
+  background: #497;
   color: black;
-  padding: 0 0.3em;
 }
-#clock.date {
-  background: #f90;
+#idle_inhibitor.activated {
+  background: red;
   color: black;
+}
+
+#pulseaudio {
+  background: #E9F;
+  color: black;
+}
+#pulseaudio.muted {
+  background: #F88;
+}
+
+#pulseaudio.mic {
+  background: #A9F;
+  color: black;
+}
+#pulseaudio.mic.source-muted {
+  background: #F66;
 }
 
 #battery {
@@ -51,17 +70,21 @@ window#waybar {
 #battery.critical { background-color: #f00; }
 #battery.charging { background-color: #0ff; }
 
-#idle_inhibitor {
-  background: #386;
+#clock.date {
+  background: #f90;
   color: black;
 }
-#idle_inhibitor.activated {
-  background: red;
+#clock.time {
+  font-size: 20px;
+  background: #fd0;
   color: black;
 }
 
+
+/* Left modules */
 #mode {
-  background: #900000;
+  background: #f55;
+  color: black;
 }
 
 #workspaces button {
@@ -75,7 +98,9 @@ window#waybar {
   color: black;
 }
 #workspaces button.urgent {
-  background: #900000;
+  background: #f44;
+  color: black;
 }
+
 
 /* vim: set et ts=2 sw=2 sts=2: */

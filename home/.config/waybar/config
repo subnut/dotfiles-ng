@@ -7,6 +7,8 @@
   ],
   "modules-right": [
     "idle_inhibitor",
+    "pulseaudio#mic",
+    "pulseaudio",
     "battery",
     "clock#date",
     "clock#time"
@@ -27,12 +29,12 @@
     "tooltip": false
   },
   "battery": {
-    "format": "{capacity}%",
-    "format-discharging": "{capacity}% <small>({time})</small>",
+    // "full-at": 80,   // Might scare ya
     // "format-charging": "{capacity}% <small>({time})</small> ",
     "format-charging": "{capacity}% <small>({time})</small> ",
+    "format-discharging": "{capacity}% <small>({time})</small>",
     "format-time": "{H}h {M}m",
-    // "full-at": 80,
+    "format": "{capacity}%",  // Default -- if neither charging nor discharging
     "tooltip": false,
     "states": {
       "full": 80,
@@ -47,6 +49,36 @@
     "format-icons": {
       "activated": "",
       "deactivated": ""
+    }
+  },
+  "pulseaudio#mic": {
+    "tooltip": false,
+    "on-click": "pactl set-source-mute @DEFAULT_SOURCE@ toggle",
+    "on-click-right": "pavucontrol -t 4",
+    "scroll-step": 0.5,
+    "format": "{format_source}",
+    "format-source": "{volume}% ",
+    "format-source-muted": "{volume}% ",
+    "format-bluetooth": "{format_source}",
+    // TODO: instead of executing pactl, integrate it in the module itself
+    "on-scroll-up": "pactl set-source-volume @DEFAULT_SOURCE@ +1%",
+    "on-scroll-down": "pactl set-source-volume @DEFAULT_SOURCE@ -1%"
+  },
+  "pulseaudio": {
+    "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+    "on-click-right": "pavucontrol",
+    "scroll-step": 0.5,
+    "format": "{volume}% {icon}",
+    "format-muted": "{volume}% ",
+    "format-bluetooth": "{volume}% {icon}",
+    "format-icons": {
+      "headphones": "",
+      "handsfree": "",
+      "headset": "",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": ["", ""]
     }
   }
 }

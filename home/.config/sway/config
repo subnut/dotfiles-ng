@@ -100,9 +100,6 @@ input "type:touchpad" {
 bindsym $mod+Ctrl+s sticky toggle
 bindsym XF86Display exec sleep 0.5 && pkill -USR1 swayidle
 
-#
-# No-op:
-#
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86AudioMute        exec pactl set-sink-mute   @DEFAULT_SINK@   toggle
