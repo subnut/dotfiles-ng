@@ -100,7 +100,7 @@ case "${1#dry_}" in
     (save) _save;;
     (load) _load;;
     (*) echo "Invalid command -- $1"
-        echo "Run \"$(basename "$0") help\" for help"
+        echo "Run ${BOLD:-'}$(basename "$0") help${RESET:-'} for help"
         exit 1;;
 esac
 
