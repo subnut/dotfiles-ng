@@ -38,55 +38,54 @@ else
     fi
 fi
 
+save() {
+    DESTDIR="$(dirname "$1")"
+
+    if [ "${HOME}${DESTDIR#$HOME}" = "$DESTDIR" ]
+    then DESTDIR="home${DESTDIR#$HOME}"
+    else DESTDIR="root${DESTDIR#$HOME}"; fi
+
+    [ ! -d "$DESTDIR" ] &&
+        mkdir -p "$DESTDIR"
+
+    if [ -d "$1" ]
+    then cp -R "$1" "$DESTDIR"
+    else cp    "$1" "$DESTDIR"; fi
+}
+
 _save() {
     run rm -rf home
-
-    run mkdir           home
-    run cp ~/.shrc      home
-    run cp ~/.zshrc     home
-    run cp ~/.vimrc     home
-    run cp ~/.profile   home
-    run cp ~/.gitconfig home
-    run cp -R ~/.zsh    home
-
-    run mkdir                   home/.ssh
-    run cp -R ~/.ssh/config     home/.ssh
-
-    run mkdir                       home/.config
-    run cp -R ~/.config/bat         home/.config
-    run cp -R ~/.config/fontconfig  home/.config
-    run cp -R ~/.config/foot        home/.config
-    run cp -R ~/.config/htop        home/.config
-    run cp -R ~/.config/lf          home/.config
-    run cp -R ~/.config/sway        home/.config
-    run cp -R ~/.config/swaylock    home/.config
-    run cp -R ~/.config/waybar      home/.config
-    run cp -R ~/.config/zathura     home/.config
+    run save ~/.shrc
+    run save ~/.zshrc
+    run save ~/.vimrc
+    run save ~/.profile
+    run save ~/.gitconfig
+    run save ~/.zsh
+    run save ~/.ssh/config
+    run save ~/.config/bat
+    run save ~/.config/fontconfig
+    run save ~/.config/foot
+    run save ~/.config/htop
+    run save ~/.config/lf
+    run save ~/.config/sway
+    run save ~/.config/swaylock
+    run save ~/.config/waybar
+    run save ~/.config/zathura
+    run save ~/.config/gtk-3.0
 
     # glirc config password check
     if grep -q 'sasl|password' ~/.config/glirc/config
     then echo >&2 'Password in ~/.config/glirc/config'
          echo >&2 'Not copying'
-    else run cp -R ~/.config/glirc  home/.config
+    else run save ~/.config/glirc
     fi
 
     run rm -rf root
-    run mkdir  root
-
-    run mkdir               root/etc
-    run cp /etc/doas.conf   root/etc
-
-    run mkdir -p                                    root/etc/elogind/logind.conf.d
-    run cp /etc/elogind/logind.conf.d/custom.conf   root/etc/elogind/logind.conf.d/custom.conf
-
-    run mkdir                       root/etc/tlp.d
-    run cp -R /etc/tlp.d/BAT0.conf  root/etc/tlp.d
-
-    run mkdir                   root/etc/acpi
-    run cp /etc/acpi/handler.sh root/etc/acpi
-
-    run mkdir                           root/etc/sudoers.d
-    run cp /etc/sudoers.d/allow_wheel   root/etc/sudoers.d
+    run save /etc/doas.conf
+    run save /etc/elogind/logind.conf.d/custom.conf
+    run save /etc/tlp.d/BAT0.conf
+    run save /etc/acpi/handler.sh
+    run save /etc/sudoers.d/allow_wheel
 }
 
 _load() {
