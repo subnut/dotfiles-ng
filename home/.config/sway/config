@@ -31,6 +31,7 @@ set $term exec footclient
 set $menu dmenu_path | dmenu | xargs swaymsg exec --
 
 ### Cosmetics
+seat seat0 xcursor_theme capitaine-cursors 24
 default_border normal 0
 titlebar_padding 5 1
 titlebar_border_thickness 0
