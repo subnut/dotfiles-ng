@@ -76,6 +76,9 @@ _save() {
     run mkdir               root/etc
     run cp /etc/doas.conf   root/etc
 
+    run mkdir -p                                    root/etc/elogind/logind.conf.d
+    run cp /etc/elogind/logind.conf.d/custom.conf   root/etc/elogind/logind.conf.d/custom.conf
+
     run mkdir                       root/etc/tlp.d
     run cp -R /etc/tlp.d/BAT0.conf  root/etc/tlp.d
 
