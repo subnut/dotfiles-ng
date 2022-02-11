@@ -26,12 +26,13 @@ else
     if [ ! -t 1 ]
     then run() { printf '%s\n' "$*"; "$@"; }
     else run() {
-            printf '[    ] %s' "$*"
+            ABBREV="$(echo "$*" | sed "s;$HOME;\$HOME;g")"
+            printf '[    ] %s' "$ABBREV"
             "$@" 1>stdout 2>stderr
             if [ $? -eq 0 ]; then
-                printf "${CSI}$(( ${#*} + 6 ))D${FG_GREEN} %s ${RESET}"'\n' OK
+                printf "${CSI}$(( ${#ABBREV} + 6 ))D${FG_GREEN} %s ${RESET}"'\n' OK
             else
-                printf "${CSI}$(( ${#*} + 6 ))D${BOLD}${FG_RED_B}%s${RESET}"'\n' FAIL
+                printf "${CSI}$(( ${#ABBREV} + 6 ))D${BOLD}${FG_RED_B}%s${RESET}"'\n' FAIL
                 cat stderr
             fi
         }
