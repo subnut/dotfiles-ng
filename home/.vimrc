@@ -138,6 +138,17 @@ com! TrailingWhitespace
                 \|let w:trailing_whitespace =
                     \matchadd('TrailingWhitespace', '\s\+$')
             \|endif
+" XXX: Experimental
+let g:TrailingWhitespaceExcludedFileTypes = [
+            \ 'gitcommit',
+            \ 'markdown',
+            \ 'fugitive',
+            \]
+" XXX: Experimental
+au TrailingWhitespace FileType *
+            \if (index(g:TrailingWhitespaceExcludedFileTypes, &l:filetype) != -1) |
+            \exe 'au TrailingWhitespace BufWinEnter <buffer> TrailingWhitespace' |
+            \endif
 " }}}
 " Colorcolumn customizations {{{
 command! ColorColumnToggle       call ColorColumnToggle(1)
