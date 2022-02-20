@@ -14,4 +14,20 @@ set incremental-search true
 set scrollbar-bg rgba(0,0,0,0)
 set guioptions vh
 
+# rice
+# set inputbar-bg "#eecc00"
+# set inputbar-fg "#000000"
+# set index-active-bg "#eecc00"
+# set index-active-fg "#000000"
+# set completion-highlight-bg "#eecc00"
+# set completion-highlight-fg "#000000"
+# set statusbar-bg "#eecc00"
+# set statusbar-fg "#000000"
+# set completion-bg "#cc5500"
+# set completion-fg "#000000"
+# set index-bg "#eecc00"
+# set index-fg "#000000"
+# set index-active-bg "#cc5500"
+# set index-active-fg "#000000"
+
 # vim: ft=conf

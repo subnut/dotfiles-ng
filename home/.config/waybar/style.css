@@ -63,17 +63,19 @@ window#waybar {
   color: #000000;
   background-color: #ffffff;
 }
-#battery.full     { background-color: #0f8; }
-#battery.good     { background-color: #6f3; }
-#battery.okay     { background-color: #ee8; }
-#battery.low      { background-color: #f77; }
-#battery.warning  { background-color: #f50; }
-#battery.critical { background-color: #f00; }
-#battery.low      { font-size: 1.15em; }
-#battery.warning  { font-size: 1.35em; }
-#battery.critical { font-size: 1.65em; }
-#battery.critical { font-weight: bolder; }
-#battery.charging { background-color: #0ff; } /* Keep at end to override the above */
+#battery.charging {
+  background-color: #0ff;
+}
+#battery.full:not(.charging)     { background-color: #0f8; }
+#battery.good:not(.charging)     { background-color: #6f3; }
+#battery.okay:not(.charging)     { background-color: #ee8; }
+#battery.low:not(.charging)      { background-color: #f77; }
+#battery.warning:not(.charging)  { background-color: #f50; }
+#battery.critical:not(.charging) { background-color: #f00; }
+#battery.low:not(.charging)      { font-size: 1.15em; }
+#battery.warning:not(.charging)  { font-size: 1.35em; }
+#battery.critical:not(.charging) { font-size: 1.65em; }
+#battery.critical:not(.charging) { font-weight: bolder; }
 
 #clock.date {
   background: #f90;
