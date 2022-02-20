@@ -18,8 +18,9 @@ step_backlight() {
 #maxspeed=$(cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq)
 #setspeed="/sys/devices/system/cpu/cpu0/cpufreq/scaling_setspeed"
 
-
+alias pactl="pactl -s $(loginctl show-user subnut | sed -n s/^RuntimePath=//p)/pulse/native"
 case "$1" in
+#[
 #    button/power)
 #        case "$2" in
 #            PBTN|PWRF)
@@ -84,13 +85,18 @@ case "$1" in
 #            *)  logger "ACPI action undefined (LID): $2";;
 #        esac
 #        ;;
-    video/brightnessdown)
-        step_backlight -
-        ;;
-    video/brightnessup)
-        step_backlight +
-        ;;
-    *)
-        logger "ACPI group/action undefined: $1 / $2"
-        ;;
+#]
+#    button/volumeup)   amixer set Master -Mq 5%+ ;;
+#    button/volumedown) amixer set Master -Mq 5%- ;;
+#    button/mute) amixer set Master  -q toggle ;;
+#    button/f20)  amixer set Capture -q toggle ;;
+    button/volumedown)  pactl set-sink-volume @DEFAULT_SINK@ -5%     ;;
+    button/volumeup)    pactl set-sink-volume @DEFAULT_SINK@ +5%     ;;
+    button/mute)        pactl set-sink-mute   @DEFAULT_SINK@   toggle;;
+    button/f20)         pactl set-source-mute @DEFAULT_SOURCE@ toggle;;
+    video/brightnessdown) step_backlight - ;;
+    video/brightnessup)   step_backlight + ;;
+    *) logger "ACPI group/action undefined: $1 / $2" ;;
 esac
+
+# vim:set ts=2 sw=4 ft=sh et fdm=marker fmr=[,]:

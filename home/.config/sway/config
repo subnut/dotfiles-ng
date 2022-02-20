@@ -101,10 +101,11 @@ input "type:touchpad" {
 bindsym $mod+Ctrl+s sticky toggle
 bindsym XF86Display exec sleep 0.5 && pkill -USR1 swayidle
 
-bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
-bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
-bindsym XF86AudioMute        exec pactl set-sink-mute   @DEFAULT_SINK@   toggle
-bindsym XF86AudioMicMute     exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+## Implemented in /etc/acpi/handler.sh
+# bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+# bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+# bindsym XF86AudioMute        exec pactl set-sink-mute   @DEFAULT_SINK@   toggle
+# bindsym XF86AudioMicMute     exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
 
 #
 # Basics:
@@ -136,6 +137,8 @@ bindsym XF86AudioMicMute     exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
     # ¯\_(ツ)_/¯
     bindsym $alt+tab focus right
     bindsym $alt+Shift+tab focus left
+    # bindsym $alt+Shift+tab focus prev
+    # bindsym $alt+tab focus next
 
     # Move your focus around
     bindsym $mod+$left focus left
