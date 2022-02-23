@@ -56,6 +56,17 @@ save() {
     else cp    "$1" "$DESTDIR"; fi
 }
 
+save_glirc_config() {
+    # glirc config password check
+    if grep -q 'password' ~/.config/glirc/config; then
+        echo >&2 'Password in ~/.config/glirc/config. Not copying.'
+        return 1
+    else
+        save ~/.config/glirc
+        return $?
+    fi
+}
+
 _save() {
     run rm -rf home
     run save ~/.shrc
@@ -76,12 +87,7 @@ _save() {
     run save ~/.config/zathura
     run save ~/.config/gtk-3.0
 
-    # glirc config password check
-    if grep -q 'sasl|password' ~/.config/glirc/config
-    then echo >&2 'Password in ~/.config/glirc/config'
-         echo >&2 'Not copying'
-    else run save ~/.config/glirc
-    fi
+    run save_glirc_config
 
     run rm -rf root
     run save /etc/doas.conf
