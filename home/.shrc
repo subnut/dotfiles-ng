@@ -113,10 +113,24 @@ exists abduco && {
     alias abduco=abduco_
     abduco_() {
 		[ $(ps p $(ps p $$ o ppid h) o comm h) = abduco ] && {
-			printf '%s - %s\n' 'WARNING!!! This shell is already running under abduco session' \
-			$(ps p $(ps p $$ o ppid h) o args h | tr ' ' '\n' | tail -n +2 |
-            sed -n '/^-/{h;d;};/^[^-]/{H;g;/^-e/{s/.*//;h;d};s/^[^[:space:]]*[[:space:]]//p;q;}')
-            # The above regex is only valid for the following synopsis -
+			printf '%s "%s"\n' 'WARNING!!! This shell is already running under abduco session' \
+            "$(
+                if [ -d /proc ] && false
+                then
+                    # xargs = poor man's trim
+                    cat "/proc/$(ps p $$ o ppid h | xargs)/cmdline" | tr '\000' '\n' |
+                    tail -n +2 | sed -n '/^-/{h;d;};x;/^-e$/{x;h;d};g;p;q'
+                else
+                    ps p $(ps p $$ o ppid h) o args h | awk '{match($0,'"$(
+                    for SOCKET in $HOME/.abduco/*; do
+                        SOCKET=${SOCKET#$HOME/.abduco/};
+                        SOCKET=${SOCKET%@*}
+                        SOCKETS="${SOCKETS}${SOCKET}|"
+                    done; echo "/${SOCKETS%|}/"
+                    )"'); print substr($0,RSTART,RLENGTH)}'
+                fi
+            )"
+            # The above logic is only valid for the following synopsis -
             #
             #   $ abduco -h
             #   abduco: invalid option -- 'h'
