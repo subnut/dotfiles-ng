@@ -87,7 +87,8 @@ exists vim && {
     alias vimrc='vim ~/.vimrc'
 }
 exists cal && {
-    alias cal='cal -3'
+    _cal() { [ $# = 0 ] && cal -3 || cal "$@"; }
+    alias cal=_cal
     alias cal1='cal -1'
     alias caly='cal -y'
 }
