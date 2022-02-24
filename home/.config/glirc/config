@@ -31,10 +31,39 @@ servers:
         nick: "subnut"
         autoconnect: yes
         tls: yes
+--      sasl:
+--          username: "........"
+--          password: "........"
         connect-cmds:
             *   "join #glirc"
             *   "join #libera"
             *   "join #voidlinux"
-            *   "join ###temp"
+            *   "join #temp"
 
--- vim: sw=4 et ts=4 sts=4
+palette:
+    meta: 0x07
+    self: 0x09
+    self-highlight:
+        fg: 0x09
+        bg: 0x0b
+    away:
+        fg: 0x09
+        bg: 0x0b
+    nick-colors:
+        *   0x01
+        *   0x02
+        *   0x03
+        *   0x05
+        *   0x06
+        *   0x0c
+        *   0x0d
+-- Colors below this line will work properly on 256-color terminals only
+        *   0xca
+        *   0x38
+        *   0x63
+        *   0x21
+        *   0x2a
+        *   0xa7
+
+-- vim: sw=4 et ts=4 sts=4 ft=config-value
+-- vim syntax file: https://raw.githubusercontent.com/glguy/config-value/master/config-value.vim
