@@ -31,9 +31,9 @@ servers:
         nick: "subnut"
         autoconnect: yes
         tls: yes
---      sasl:
---          username: "........"
---          password: "........"
+        sasl:
+            username: "..."
+            password: "..."
         connect-cmds:
             *   "join #glirc"
             *   "join #libera"

@@ -57,14 +57,25 @@ save() {
 }
 
 save_glirc_config() {
-    # glirc config password check
-    if grep -q 'password' ~/.config/glirc/config; then
-        echo >&2 'Password in ~/.config/glirc/config. Not copying.'
+    grep -Fq 'sasl-' "$HOME/.config/glirc/config" && {
+        echo "This is the old config format. Not supported."
+        echo "Please upgrade to latest glirc."
         return 1
-    else
-        save ~/.config/glirc
-        return $?
-    fi
+    }
+
+    cp "$HOME/.config/glirc/config" "$HOME/.config/glirc/config.bak"
+    EC=$?; [ $EC -eq 0 ] || return $EC
+
+    sed '/sasl:/{n;s/name:.*/name: "..."/;n;s/word:.*/word: "..."/;n}' \
+        <"$HOME/.config/glirc/config.bak" \
+        >"$HOME/.config/glirc/config"
+    EC=$?; [ $EC -eq 0 ] || return $EC
+
+    save "$HOME/.config/glirc/config"
+    EC=$?; [ $EC -eq 0 ] || return $EC
+
+    mv "$HOME/.config/glirc/config.bak" "$HOME/.config/glirc/config"
+    EC=$?; [ $EC -eq 0 ] || return $EC
 }
 
 _save() {
@@ -101,7 +112,12 @@ _load() {
     # TODO: Copy the files from this directory to the respective directories.
     #       Also, check before copying if the file exists already. If yes, show the diff
     #       to the user and ask if that file should be replaced/backed-up-and-replaced/kept.
+    # TODO: Since we strip out the sasl username and password in _save(), we should ensure that
+    #       they are set to the correct values here (while loading back to $HOME), possibly by
+    #       prompting the user to enter the sasl username and password here, or by printing a
+    #       warning message.
     echo >&2 Not implemented yet
+    return 1
 }
 
 case "${1#dry_}" in
