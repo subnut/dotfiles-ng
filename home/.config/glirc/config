@@ -20,6 +20,8 @@ key-bindings:
         command: "toggle-metadata"
     *   bind: "F4"
         command: "toggle-activity-bar"
+    *   bind: "M-l"
+        command: "windows"
 
 defaults:
     username:   "subnut"
