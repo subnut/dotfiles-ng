@@ -1,6 +1,7 @@
 // Fontawesome is required for icons
 {
   "ipc": true,
+  "height": 1,
   "modules-left": [
     "sway/workspaces",
     "sway/mode"

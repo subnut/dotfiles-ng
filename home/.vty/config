@@ -1,0 +1,2 @@
+map "foot" "\ESC[5;3~" KPageUp [MMeta]
+map "foot" "\ESC[6;3~" KPageDown [MMeta]

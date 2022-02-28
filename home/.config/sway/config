@@ -325,8 +325,8 @@ bindsym $mod+Ctrl+Shift+Right  move workspace to output right
 #    }
 #}
 bar {
-    id waybar
     swaybar_command waybar
+    id waybar
 }
 
 

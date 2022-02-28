@@ -99,6 +99,7 @@ _save() {
     run save ~/.config/gtk-3.0
 
     run save_glirc_config
+    run save ~/.vty
 
     run rm -rf root
     run save /etc/doas.conf

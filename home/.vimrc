@@ -292,24 +292,16 @@ aug delayed_plug_load
     au!
 aug END
 call plug#begin('~/.config/nvim/plugged')
-Plug 'subnut/visualstar.vim'
-    au delayed_plug_load BufEnter * ++once
-                \ call timer_start(0, {->plug#load('visualstar.vim')})
-    xmap <leader>* <Plug>(VisualstarSearchReplace)
-    nmap <leader>* <Plug>(VisualstarSearchReplace)
+Plug 'guns/vim-sexp'
+Plug 'editorconfig/editorconfig-vim'
 
+" language support
+Plug 'ziglang/zig.vim'
+Plug 'zah/nim.vim'
+
+" git-related
 Plug 'tpope/vim-fugitive'
-Plug 'junegunn/gv.vim', {'on': 'GV'}    " Commit browser
-
-Plug 'mbbill/undotree', {'on': 'UndotreeToggle'}
-    let g:undotree_WindowLayout = 2
-    let g:undotree_SetFocusWhenToggle = 1
-    nnoremap <leader>u <cmd>UndotreeToggle<cr>
-
-Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'}
-    let g:mundo_preview_bottom = 1
-    nnoremap <leader>m <cmd>MundoToggle<cr>
-
+Plug 'junegunn/gv.vim', {'on': 'GV'}        " Commit browser
 Plug 'airblade/vim-gitgutter', {'on': []}   " Git diff
     au delayed_plug_load BufEnter * ++once call timer_start(0, {->execute("
                 \call plug#load('vim-gitgutter')
@@ -324,6 +316,21 @@ Plug 'airblade/vim-gitgutter', {'on': []}   " Git diff
     hi GitGutterChange  ctermfg=3
     hi GitGutterDelete  ctermfg=1
 
+Plug 'subnut/visualstar.vim'
+    au delayed_plug_load BufEnter * ++once
+                \ call timer_start(0, {->plug#load('visualstar.vim')})
+    xmap <leader>* <Plug>(VisualstarSearchReplace)
+    nmap <leader>* <Plug>(VisualstarSearchReplace)
+
+Plug 'mbbill/undotree', {'on': 'UndotreeToggle'}
+    let g:undotree_WindowLayout = 2
+    let g:undotree_SetFocusWhenToggle = 1
+    nnoremap <leader>u <cmd>UndotreeToggle<cr>
+
+Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'}
+    let g:mundo_preview_bottom = 1
+    nnoremap <leader>m <cmd>MundoToggle<cr>
+
 Plug 'psf/black', { 'branch': 'stable', 'on': [] }          " Auto-formatter
     au delayed_plug_load BufEnter * ++once
                 \ call timer_start(100, {->plug#load('black')})
@@ -332,6 +339,9 @@ Plug 'psf/black', { 'branch': 'stable', 'on': [] }          " Auto-formatter
         au BufWritePre * exe (&l:ft == 'python' ? 'Black' : '')
     aug END
 
+" themes
+Plug 'NLKNguyen/papercolor-theme'
+Plug 'cocopon/iceberg.vim'
 Plug 'sainnhe/gruvbox-material'
     let g:gruvbox_material_better_performance = 1
     let g:gruvbox_material_sign_column_background = 'none'
@@ -342,7 +352,6 @@ Plug 'sainnhe/gruvbox-material'
         au ColorScheme gruvbox-material hi CurrentWord
                     \ term=underline cterm=underline gui=underline
     aug END
-Plug 'NLKNguyen/papercolor-theme'
 call plug#end()
 else
     echohl WarningMsg
