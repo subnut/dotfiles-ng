@@ -78,6 +78,16 @@ save_glirc_config() {
     EC=$?; [ $EC -eq 0 ] || return $EC
 }
 
+save_pkglist() {
+    # Void linux
+    command -v xbps-query >/dev/null 2>/dev/null && {
+        rm -f pkglist/void
+        for pkg in $(xbps-query -m)
+        do echo "${pkg%-*}" >> pkglist/void
+        done
+    }
+}
+
 _save() {
     run rm -rf home
     run save ~/.shrc
@@ -107,6 +117,8 @@ _save() {
     run save /etc/tlp.d/BAT0.conf
     run save /etc/acpi/handler.sh
     run save /etc/sudoers.d/allow_wheel
+
+    run save_pkglist
 }
 
 _load() {
