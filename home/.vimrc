@@ -293,6 +293,7 @@ aug delayed_plug_load
 aug END
 call plug#begin('~/.config/nvim/plugged')
 Plug 'editorconfig/editorconfig-vim'
+    let g:EditorConfig_exclude_patterns = ['^[[:alpha:]]*://.*']
     let g:EditorConfig_exec_path = exepath('editorconfig')
     let g:EditorConfig_core_mode = !empty(g:EditorConfig_exec_path)
                                     \? 'external_command'

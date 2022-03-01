@@ -5,19 +5,22 @@ alias l='ls -lA'
 alias shrug="printf %s '¯\_(ツ)_/¯'"
 alias exists='command -v >/dev/null'
 
-# We use :$PATH: to handle if the required path is in start or end of $PATH
+## Add ~/.local/bin to $PATH
+# NOTE: We use :$PATH: to handle if the required path is in start or end of $PATH
 # See: https://unix.stackexchange.com/a/32054
 echo ":$PATH:" | grep -Fq ":$HOME/.local/bin" ||
     export PATH=$HOME/.local/bin:$PATH
 
 exists yt-dlp &&
     alias yt-dlp='yt-dlp -N 8'
+exists curl &&
+    alias curl='curl --parallel --parallel-immediate'
 exists zsh &&
     alias zshrc='$EDITOR $HOME/.zshrc'
-exists ssh-agent &&
-    alias withssh='SSH_AUTH_SOCK=$_SSH_AUTH_SOCK SSH_AGENT_PID=$_SSH_AGENT_PID'
 exists sway &&
     alias swayprop="$HOME/.config/sway/swayprop"
+exists ssh-agent &&
+    alias withssh='SSH_AUTH_SOCK=$_SSH_AUTH_SOCK SSH_AGENT_PID=$_SSH_AGENT_PID'
 
 exists fzf && {
     export FZF_DEFAULT_OPTS="--ansi \
