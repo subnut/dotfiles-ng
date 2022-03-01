@@ -292,12 +292,23 @@ aug delayed_plug_load
     au!
 aug END
 call plug#begin('~/.config/nvim/plugged')
-Plug 'guns/vim-sexp'
 Plug 'editorconfig/editorconfig-vim'
+    let g:EditorConfig_exec_path = exepath('editorconfig')
+    let g:EditorConfig_core_mode = !empty(g:EditorConfig_exec_path)
+                                    \? 'external_command'
+                                    \: 'vim_core'
 
 " language support
-Plug 'ziglang/zig.vim'
-Plug 'zah/nim.vim'
+Plug 'zah/nim.vim',     {'for': 'nim'}
+Plug 'ziglang/zig.vim', {'for': 'zig'}
+
+" Improve editing experience
+Plug 'guns/vim-sexp'
+Plug 'subnut/visualstar.vim'
+    au delayed_plug_load BufEnter * ++once
+                \ call timer_start(0, {->plug#load('visualstar.vim')})
+    xmap <leader>* <Plug>(VisualstarSearchReplace)
+    nmap <leader>* <Plug>(VisualstarSearchReplace)
 
 " git-related
 Plug 'tpope/vim-fugitive'
@@ -316,22 +327,14 @@ Plug 'airblade/vim-gitgutter', {'on': []}   " Git diff
     hi GitGutterChange  ctermfg=3
     hi GitGutterDelete  ctermfg=1
 
-Plug 'subnut/visualstar.vim'
-    au delayed_plug_load BufEnter * ++once
-                \ call timer_start(0, {->plug#load('visualstar.vim')})
-    xmap <leader>* <Plug>(VisualstarSearchReplace)
-    nmap <leader>* <Plug>(VisualstarSearchReplace)
-
+" undotree
 Plug 'mbbill/undotree', {'on': 'UndotreeToggle'}
     let g:undotree_WindowLayout = 2
     let g:undotree_SetFocusWhenToggle = 1
     nnoremap <leader>u <cmd>UndotreeToggle<cr>
 
-Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'}
-    let g:mundo_preview_bottom = 1
-    nnoremap <leader>m <cmd>MundoToggle<cr>
-
-Plug 'psf/black', { 'branch': 'stable', 'on': [] }          " Auto-formatter
+" python auto-formatter
+Plug 'psf/black', { 'branch': 'stable', 'on': [] }
     au delayed_plug_load BufEnter * ++once
                 \ call timer_start(100, {->plug#load('black')})
     aug Black
