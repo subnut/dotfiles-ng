@@ -5,7 +5,7 @@
 # Read `man 5 sway` for a complete reference.
 
 ### Startup stuff?
-exec wlsunset -l 26.1 -L 91.7
+exec exec wlsunset -l 26.1 -L 91.7
 exec_always {
     exec foot --server
     pgrep pipewire       || exec pipewire
