@@ -1,11 +1,10 @@
 /* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
 #workspaces button:hover {
+  border: inherit;
+  background: inherit;
   box-shadow: inherit;
   text-shadow: inherit;
-}
-#workspaces button:hover {
-  background: inherit;
-  border: inherit;
+  transition: none;
 }
 
 
