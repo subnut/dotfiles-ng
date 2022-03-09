@@ -30,12 +30,14 @@ defaults:
 servers:
     *   name: "libera"
         hostname: "irc.libera.chat"
-        nick: "subnut"
         autoconnect: yes
         tls: yes
         sasl:
             username: "..."
             password: "..."
+        nick:
+            *   "subnut"
+            *   "snath03"
         connect-cmds:
             *   "join #glirc"
             *   "join #libera"

@@ -384,6 +384,17 @@ elseif $TERM =~ 'alacritty'
 endif
 
 
+" https://codeberg.org/dnkl/foot/issues/628
+" dnkl: Note that foot by default emits escapes that require modifyOtherKeys
+"       to be enabled in XTerm. I.e. foot's default doesn't match XTerm's
+"       default
+":h modifyOtherKeys
+if $TERM == 'foot'
+    let &t_TI = "\<Esc>[>4;2m"
+    let &t_TE = "\<Esc>[>4;m"
+endif
+
+
 if $TERM =~ 'alacritty\|st-256color'
     set termguicolors
     colorscheme gruvbox-material
