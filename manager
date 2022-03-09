@@ -22,25 +22,6 @@ cd "$(dirname "$0")"
 touch stdout stderr; chmod 0600 stdout stderr
 trap 'rm -f stdout stderr' EXIT INT HUP TERM
 
-if [ "$1" = "dry_${1#dry_}" ]
-then run() { printf '%s\n' "$*"; }
-else
-    if ! [ $IS_TTY ]
-    then run() { printf '%s\n' "$*"; "$@"; }
-    else run() {
-            ABBREV="$(echo "$*" | sed "s;$HOME;\$HOME;g")"
-            printf '[    ] %s' "$ABBREV"
-            "$@" 1>stdout 2>stderr
-            if [ $? -eq 0 ]; then
-                printf "${CSI}$(( ${#ABBREV} + 6 ))D${FG_GREEN} %s ${RESET}"'\n' OK
-            else
-                printf "${CSI}$(( ${#ABBREV} + 6 ))D${BOLD}${FG_RED_B}%s${RESET}"'\n' FAIL
-                cat stderr
-            fi
-        }
-    fi
-fi
-
 save() {
     DESTDIR="$(dirname "$1")"
 
@@ -135,9 +116,67 @@ _load() {
     return 1
 }
 
+_test() {
+    success() { true; }
+    failure() { false; }
+
+    success_with_stdout() { echo It worked!; }
+    failure_with_stdout() { echo It failed!; return 1; }
+    failure_with_stderr() { echo error output goes here. >&2; return 1; }
+    failure_with_stdout_stderr() {
+        echo stdout message informing the user
+        echo >&2 error output showing more details
+        echo >&2 to help the developer identify the bug
+        return 1
+    }
+
+    run success
+    run success_with_stdout
+
+    run failure
+    run failure_with_stdout
+    run failure_with_stderr
+    run failure_with_stdout_stderr
+}
+
+run() {
+    printf '%s\n' "$*"
+    "$@"
+}
+
+[ $IS_TTY ] && {
+    print_output(){
+        FILE=$1; [ -s $FILE ] || return  # empty
+        exec 4<$FILE
+        while read -r LINE <&4; do
+            printf "${BOLD}%s: ${RESET}" "${FILE#std}"
+            printf "%s\n" "$LINE"
+        done
+        exec 4<&-
+    }
+    run() {
+        CMD="$(echo "$*" | sed "s;$HOME;\$HOME;g")"
+        PREFIX="${CSI}$(( ${#CMD} + 6 ))D"
+        printf '[    ] %s' "$CMD"
+
+        "$@" 1>stdout 2>stderr
+
+        if [ $? -eq 0 ]
+        then printf "${PREFIX}${FG_GREEN}%s${RESET}"'\n'        ' OK '
+        else printf "${PREFIX}${BOLD}${FG_RED_B}%s${RESET}"'\n' 'FAIL'
+            print_output stdout
+            print_output stderr
+        fi
+    }
+}
+
+[ "$1" = "dry_${1#dry_}" ] &&
+    run() { printf '%s\n' "$*"; }
+
 case "${1#dry_}" in
     (save) _save;;
     (load) _load;;
+    (test) _test;;
     (*) echo "Invalid command -- $1"
         echo "Run ${BOLD:-'}$(basename "$0") help${RESET:-'} for help"
         exit 1;;
