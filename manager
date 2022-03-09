@@ -46,14 +46,16 @@ save() {
 
     if [ "${HOME}${DESTDIR#$HOME}" = "$DESTDIR" ]
     then DESTDIR="home${DESTDIR#$HOME}"
-    else DESTDIR="root${DESTDIR#$HOME}"; fi
+    else DESTDIR="root${DESTDIR}"
+    fi
 
     [ ! -d "$DESTDIR" ] &&
         mkdir -p "$DESTDIR"
 
     if [ -d "$1" ]
     then cp -R "$1" "$DESTDIR"
-    else cp    "$1" "$DESTDIR"; fi
+    else cp    "$1" "$DESTDIR"
+    fi
 }
 
 save_glirc_config() {
