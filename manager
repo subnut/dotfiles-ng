@@ -148,9 +148,10 @@ run() {
     print_output(){
         FILE=$1; [ -s $FILE ] || return  # empty
         exec 4<$FILE
+        FILE=${FILE#std}
         while read -r LINE <&4; do
-            printf "${BOLD}%s: ${RESET}" "${FILE#std}"
-            printf "%s\n" "$LINE"
+            printf "${BOLD}%s: ${RESET}" $FILE
+            printf "%s\n" "$LINE"   # most echo implementations are non-POSIX
         done
         exec 4<&-
     }
