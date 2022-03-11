@@ -6,6 +6,7 @@ source $VIMRUNTIME/defaults.vim
 set title
 set smarttab
 set smartcase   " NOTE: by default ignorecase is off, so this is meaningless
+set ignorecase
 set splitbelow
 set splitright
 set equalalways
@@ -55,14 +56,6 @@ com! -nargs=+ -complete=shellcmd Man delcom Man | runtime ftplugin/man.vim
 com! -range -bang Notab let b:Notab_et = &l:et | let &l:et = 1 | exe
             \ (<range>?(<range>-1)?"<line1>,<line2>":"<line1>":"")."retab"
             \."<bang>" | let &l:et = b:Notab_et | unlet b:Notab_et
-" }}}
-" Bracketed paste support {{{
-if $TERM =~ 'st-256color\|foot'
-    let &t_BE = "\e[?2004h"
-    let &t_BD = "\e[?2004l"
-    exec "set t_PS=\e[200~"
-    exec "set t_PE=\e[201~"
-endif
 " }}}
 " Swap files {{{
 if !isdirectory(fnamemodify('~/.vimswap', ':p'))
@@ -283,6 +276,34 @@ elseif has('unix') && executable('xclip')
     aug END
 endif
 " }}}
+" Terminal quirks {{{
+" Bracketed paste support
+if $TERM =~ 'st-256color\|foot'
+    let &t_BE = "\e[?2004h"
+    let &t_BD = "\e[?2004l"
+    exec "set t_PS=\e[200~"
+    exec "set t_PE=\e[201~"
+endif
+
+":h xterm-true-color
+if $TERM =~ 'st-256color\|foot'
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+elseif $TERM =~ 'alacritty'
+    let &t_8f = "\<Esc>[38:2:%lu:%lu:%lum"
+    let &t_8b = "\<Esc>[48:2:%lu:%lu:%lum"
+endif
+
+" https://codeberg.org/dnkl/foot/issues/628
+" dnkl: Note that foot by default emits escapes that require modifyOtherKeys
+"       to be enabled in XTerm. I.e. foot's default doesn't match XTerm's
+"       default
+":h modifyOtherKeys
+if $TERM == 'foot'
+    let &t_TI = "\<Esc>[>4;2m"
+    let &t_TE = "\<Esc>[>4;m"
+endif
+"}}}
 
 
 if !empty(glob('~/.vim/autoload/plug.vim'))
@@ -372,27 +393,6 @@ else
     endif
 endif
 "}}}
-
-
-":h xterm-true-color
-if $TERM =~ 'st-256color\|foot'
-    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-elseif $TERM =~ 'alacritty'
-    let &t_8f = "\<Esc>[38:2:%lu:%lu:%lum"
-    let &t_8b = "\<Esc>[48:2:%lu:%lu:%lum"
-endif
-
-
-" https://codeberg.org/dnkl/foot/issues/628
-" dnkl: Note that foot by default emits escapes that require modifyOtherKeys
-"       to be enabled in XTerm. I.e. foot's default doesn't match XTerm's
-"       default
-":h modifyOtherKeys
-if $TERM == 'foot'
-    let &t_TI = "\<Esc>[>4;2m"
-    let &t_TE = "\<Esc>[>4;m"
-endif
 
 
 if $TERM =~ 'alacritty\|st-256color'
