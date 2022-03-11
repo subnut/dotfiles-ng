@@ -2,12 +2,19 @@
 unset IS_TTY
 [ $FORCE_TTY ] || [ -t 1 ] && {
     export IS_TTY=1
+
     export CSI="$(printf '\033')["
     export RESET="${CSI}m"
     export BOLD="${CSI}1m"
-    export FG_GREEN="${CSI}32m"
-    export FG_RED="${CSI}31m"
-    export FG_RED_B="${CSI}91m" # Bright
+
+    export RED=31
+    export GREEN=32
+    export YELLOW=33
+
+    for COLOR in RED GREEN YELLOW; do
+        export FG_$COLOR="${CSI}$(( $COLOR ))m"
+        export FG_${COLOR}_B="${CSI}$(( $COLOR + 60 ))m" # bright
+    done
 }
 
 [ $# -eq 0 ] || [ "$1" = help ] && {
@@ -120,6 +127,9 @@ _test() {
     success() { true; }
     failure() { false; }
 
+    success_delayed() { sleep 3; true; }
+    failure_delayed() { sleep 3; false; }
+
     success_with_stdout() { echo It worked!; }
     failure_with_stdout() { echo It failed!; return 1; }
     failure_with_stderr() { echo error output goes here. >&2; return 1; }
@@ -131,9 +141,11 @@ _test() {
     }
 
     run success
+    run success_delayed
     run success_with_stdout
 
     run failure
+    run failure_delayed
     run failure_with_stdout
     run failure_with_stderr
     run failure_with_stdout_stderr
@@ -157,8 +169,8 @@ run() {
     }
     run() {
         CMD="$(echo "$*" | sed "s;$HOME;\$HOME;g")"
-        PREFIX="${CSI}$(( ${#CMD} + 6 ))D"
-        printf '[    ] %s' "$CMD"
+        PREFIX="${CSI}$(( ${#CMD} + 6 ))D"  # 6 for "[    ]"
+        printf "[${FG_YELLOW}WAIT${RESET}] %s" "$CMD"
 
         "$@" 1>stdout 2>stderr
 
