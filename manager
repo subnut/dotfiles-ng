@@ -124,11 +124,13 @@ _load() {
 }
 
 _test() {
+    DELAY=3
+
     success() { true; }
     failure() { false; }
 
-    success_delayed() { sleep 3; true; }
-    failure_delayed() { sleep 3; false; }
+    success_delayed() { sleep $DELAY; true; }
+    failure_delayed() { sleep $DELAY; false; }
 
     success_with_stdout() { echo It worked!; }
     failure_with_stdout() { echo It failed!; return 1; }
@@ -169,14 +171,13 @@ run() {
     }
     run() {
         CMD="$(echo "$*" | sed "s;$HOME;\$HOME;g")"
-        PREFIX="${CSI}$(( ${#CMD} + 6 ))D"  # 6 for "[    ]"
         printf "[${FG_YELLOW}WAIT${RESET}] %s" "$CMD"
 
         "$@" 1>stdout 2>stderr
 
         if [ $? -eq 0 ]
-        then printf "${PREFIX}${FG_GREEN}%s${RESET}"'\n'        ' OK '
-        else printf "${PREFIX}${BOLD}${FG_RED_B}%s${RESET}"'\n' 'FAIL'
+        then printf "${CSI}1G[${FG_GREEN}%s${RESET}]\n"        ' OK '
+        else printf "${CSI}1G[${BOLD}${FG_RED_B}%s${RESET}]\n" 'FAIL'
             print_output stdout
             print_output stderr
         fi
