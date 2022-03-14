@@ -64,12 +64,11 @@ function _exectime {
     # _epochtime_preexec is not defined yet
     function _exectime {
         RPROMPT="%f"
-        if [[ ${_epochtime_preexec[1]} -eq ${_epochtime_precmd[1]} ]]; then
-            local nanosec=$(( _epochtime_precmd[2] - _epochtime_preexec[2] ))
-            local sec="$(( nanosec / 1000000000.0 ))"
-            RPROMPT="${sec:0:5}s$RPROMPT"   # 0.xxx -- 5 chars
+        local sec=$(( _epochtime_precmd[3] - _epochtime_preexec[3] ))
+        [[ $sec -lt 0.01 ]] && return
+        if [[ $sec -lt 1 ]]
+        then RPROMPT="${sec:0:4}s$RPROMPT"   # 0.xxx -- 4 chars
         else
-            local sec
             sec=$(( _epochtime_precmd[1] - _epochtime_preexec[1] ))
             RPROMPT="$(( sec % 60 ))s$RPROMPT"
             [[ $(( sec /= 60 )) -gt 0 ]] &&
@@ -82,15 +81,8 @@ function _exectime {
         RPROMPT="%F{${prompt_colors[grey]}}$RPROMPT"
     }
 }
-function _exectime_precmd   {
-    if [[ _epochtime_precmd[1] -lt _epochtime_preexec[1] ]] ||
-        [[ _epochtime_precmd[2] -lt _epochtime_preexec[2] ]]
-    then _epochtime_precmd=($epochtime)
-    fi
-}
-function _exectime_preexec  {
-    _epochtime_preexec=($epochtime)
-}
+function _exectime_preexec { _epochtime_preexec=($epochtime $EPOCHREALTIME)  }
+function _exectime_precmd  { _epochtime_precmd=($epochtime $EPOCHREALTIME)   }
 preexec_functions+=_exectime_preexec
 precmd_functions+=_exectime_precmd
 precmd_functions+=_exectime
