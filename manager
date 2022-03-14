@@ -1,23 +1,20 @@
 #!/bin/sh
+export CSI="$(printf '\033')["
+echo() { printf "%s\n" "$*"; }
+
 unset IS_TTY
 [ $FORCE_TTY ] || [ -t 1 ] && {
     export IS_TTY=1
-
-    export CSI="$(printf '\033')["
-    export RESET="${CSI}m"
     export BOLD="${CSI}1m"
-
-    export RED=31
-    export GREEN=32
-    export YELLOW=33
-
+    export RESET="${CSI}m"
+    export RED=31 GREEN=32 YELLOW=33
     for COLOR in RED GREEN YELLOW; do
         export FG_$COLOR="${CSI}$(( $COLOR ))m"
         export FG_${COLOR}_B="${CSI}$(( $COLOR + 60 ))m" # bright
     done
 }
 
-[ $# -eq 0 ] || [ "$1" = help ] && {
+[ $# -eq 0 ] || echo "$1" | grep -Eq '^-?-?h' && {
     NAME="$(basename "$0")"
     echo "${NAME} ${BOLD}save${RESET} -- Save current settings to repo"
     echo "${NAME} ${BOLD}load${RESET} -- Load settings from repo"
@@ -27,7 +24,8 @@ unset IS_TTY
 
 cd "$(dirname "$0")"
 touch stdout stderr; chmod 0600 stdout stderr
-trap 'rm -f stdout stderr' EXIT INT HUP TERM
+trap 'rm -f stdout stderr' EXIT
+trap exit INT HUP TERM
 
 save() {
     DESTDIR="$(dirname "$1")"
@@ -124,7 +122,7 @@ _load() {
 }
 
 _test() {
-    DELAY=3
+    DELAY=1
 
     success() { true; }
     failure() { false; }
@@ -148,44 +146,42 @@ _test() {
 
     run failure
     run failure_delayed
-    run failure_with_stdout
     run failure_with_stderr
+    run failure_with_stdout
     run failure_with_stdout_stderr
 }
 
-run() {
-    printf '%s\n' "$*"
-    "$@"
-}
-
-[ $IS_TTY ] && {
-    print_output(){
+if [ "$1" = "dry_${1#dry_}" ]; then
+    run() { echo "$*"; }
+elif [ ! $IS_TTY ]; then
+    run() { echo "$*"; "$@"; }
+else
+    run() {
+        CMD="$(echo "$*" | sed "s;$HOME;\$HOME;g")"
+        echo "[${FG_YELLOW}WAIT${RESET}] $CMD"
+        "$@" 1>stdout 2>stderr
+        if [ $? -eq 0 ]
+        then printf "${CSI}1A${CSI}1G[${FG_GREEN}%s${RESET}]\n"        ' OK '
+        else printf "${CSI}1A${CSI}1G[${BOLD}${FG_RED_B}%s${RESET}]\n" 'FAIL'
+            if [ ! -s stdout ]
+            then cat stderr
+            else
+                print_output stdout
+                print_output stderr
+            fi
+        fi
+    }
+    print_output() {
         FILE=$1; [ -s $FILE ] || return  # empty
         exec 4<$FILE
         FILE=${FILE#std}
         while read -r LINE <&4; do
             printf "${BOLD}%s: ${RESET}" $FILE
-            printf "%s\n" "$LINE"   # most echo implementations are non-POSIX
+            echo "$LINE"
         done
         exec 4<&-
     }
-    run() {
-        CMD="$(echo "$*" | sed "s;$HOME;\$HOME;g")"
-        printf "[${FG_YELLOW}WAIT${RESET}] %s" "$CMD"
-
-        "$@" 1>stdout 2>stderr
-
-        if [ $? -eq 0 ]
-        then printf "${CSI}1G[${FG_GREEN}%s${RESET}]\n"        ' OK '
-        else printf "${CSI}1G[${BOLD}${FG_RED_B}%s${RESET}]\n" 'FAIL'
-            print_output stdout
-            print_output stderr
-        fi
-    }
-}
-
-[ "$1" = "dry_${1#dry_}" ] &&
-    run() { printf '%s\n' "$*"; }
+fi
 
 case "${1#dry_}" in
     (save) _save;;
