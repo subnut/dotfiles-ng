@@ -2,6 +2,9 @@ Waybar
 age
 base-system
 bat
+bind-utils
+bmake
+cgrps
 curl
 dejavu-fonts-ttf
 editorconfig
@@ -37,11 +40,14 @@ pavucontrol
 pipewire
 pipewire-doc
 pkgconf
+powertop
 pulseaudio-utils
 python3-pipx
 qt5-wayland
+ranger
 refind
 ripgrep
+sbcl
 seatd
 slurp
 strace
@@ -68,3 +74,4 @@ zfs
 zfsbootmenu
 zig
 zsh
+zstd
