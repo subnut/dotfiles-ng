@@ -21,6 +21,8 @@ exists sway &&
     alias swayprop="$HOME/.config/sway/swayprop"
 exists ssh-agent &&
     alias withssh='SSH_AUTH_SOCK=$_SSH_AUTH_SOCK SSH_AGENT_PID=$_SSH_AGENT_PID'
+exists ssh && echo "$TERM" | grep -Eq 'alacritty|foot|xterm-kitty' &&
+    alias ssh='TERM=xterm-256color ssh'
 
 exists fzf && {
     export FZF_DEFAULT_OPTS="--ansi \
