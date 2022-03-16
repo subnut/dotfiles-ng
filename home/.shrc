@@ -8,7 +8,7 @@ alias exists='command -v >/dev/null'
 ## Add ~/.local/bin to $PATH
 # NOTE: We use :$PATH: to handle if the required path is in start or end of $PATH
 # See: https://unix.stackexchange.com/a/32054
-echo ":$PATH:" | grep -Fq ":$HOME/.local/bin" ||
+echo ":$PATH:" | grep -Fq ":$HOME/.local/bin:" ||
     export PATH=$HOME/.local/bin:$PATH
 
 exists yt-dlp &&
