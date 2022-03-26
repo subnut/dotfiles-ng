@@ -256,33 +256,57 @@ vmap <Plug>(MyCommentor) <ESC>'<<Plug>(MyCommentor)'>
 " Copy to clipboard {{{
 if has('xterm_clipboard') && has('unnamedplus')
     set clipboard=unnamedplus
-elseif has('unix') && executable('xclip')
+elseif has('unix')
     " NOTE: We check for +unix because the system() function is available only
     " on unix.
-    aug YankToClipboard
-        au!
-        au TextYankPost *
-            \ if v:event.regname ==# '' && v:event.regtype =~ "\<C-V>"
-                \|silent! call system(
-                    \'xclip -in -sel clipboard',
-                    \ join(v:event.regcontents, "\n")
-                \)
-            \|elseif v:event.regtype ==? 'v'
-                \| silent! call system(
-                    \'xclip -in -sel clipboard',
-                    \ v:event.regcontents . "\n"
-                \)
-            \|endif
-    aug END
+    if executable('xclip') && !empty($DISPLAY)
+        aug YankToClipboard
+            au!
+            au TextYankPost *
+                \ if v:event.regname ==# '' && v:event.regtype =~ "\<C-V>"
+                    \|silent! call system(
+                        \'xclip -in -sel clipboard',
+                        \ join(v:event.regcontents, "\n")
+                    \)
+                \|elseif v:event.regtype ==? 'v'
+                    \| silent! call system(
+                        \'xclip -in -sel clipboard',
+                        \ v:event.regcontents[0] . "\n"
+                    \)
+                \|endif
+        aug END
+    elseif executable('wl-copy') && !empty($WAYLAND_DISPLAY)
+        aug YankToClipboard
+            au!
+            au TextYankPost *
+                \ if v:event.regname ==# '' && v:event.regtype =~ "\<C-V>"
+                    \|silent! call system(
+                        \'wl-copy',
+                        \ join(v:event.regcontents, "\n")
+                    \)
+                \|elseif v:event.regtype ==? 'v'
+                    \| silent! call system(
+                        \'wl-copy',
+                        \ v:event.regcontents[0] . "\n"
+                    \)
+                \|endif
+        aug END
+    endif
 endif
 " }}}
 " Terminal quirks {{{
 " Bracketed paste support
 if $TERM =~ 'st-256color\|foot'
-    let &t_BE = "\e[?2004h"
-    let &t_BD = "\e[?2004l"
-    exec "set t_PS=\e[200~"
-    exec "set t_PE=\e[201~"
+    let &t_BE = "\<Esc>[?2004h"
+    let &t_BD = "\<Esc>[?2004l"
+    let &t_PS = "\<Esc>[200~"
+    let &t_PE = "\<Esc>[201~"
+endif
+
+" Automatic detection of `bg`
+if $TERM =~ 'alacritty\|foot'
+    let &t_RB = "\<Esc>]11;?\<C-g>"
+    let &t_RF = "\<Esc>]10;?\<C-g>"
 endif
 
 ":h xterm-true-color
@@ -395,7 +419,7 @@ endif
 "}}}
 
 
-if $TERM =~ 'alacritty\|st-256color'
+if $TERM =~ 'st-256color'
     set termguicolors
     colorscheme gruvbox-material
 endif

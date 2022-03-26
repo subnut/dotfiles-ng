@@ -54,9 +54,11 @@ save_glirc_config() {
     cp "$HOME/.config/glirc/config" "$HOME/.config/glirc/config.bak"
     EC=$?; [ $EC -eq 0 ] || return $EC
 
-    sed '/sasl:/{n;s/name:.*/name: "..."/;n;s/word:.*/word: "..."/;n}' \
+    sed >"$HOME/.config/glirc/config" \
         <"$HOME/.config/glirc/config.bak" \
-        >"$HOME/.config/glirc/config"
+        -e '/sasl:/{n;s/name:.*/name: "..."/;n;s/word:.*/word: "..."/;n}' \
+        -e '/port:/s/port:.*/port: 0/' \
+        -e '/password:/s/word:.*/word: "..."/'
     EC=$?; [ $EC -eq 0 ] || return $EC
 
     save "$HOME/.config/glirc/config"

@@ -65,9 +65,17 @@ source $ZDOTDIR/.zsh/OMZ_snippets/clipboard.zsh
 }
 
 
+## Custom completions
+(( ${+functions[compdef]} )) && {
+    # Enable completion for any function aliased to ssh
+    (( ${+functions[${aliases[ssh]}]} )) && compdef "${aliases[ssh]}=ssh"
+}
+
+
 ## Custom commands
 (( ${+functions[_xbps]} )) && _xbps && {
-    compdef _xbps_comp xbps
+    (( ${+functions[compdef]} )) &&
+        compdef _xbps_comp xbps
     _xbps_comp() {
         case ${#words} in
             (2) compadd 'search'

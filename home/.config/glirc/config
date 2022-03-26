@@ -28,9 +28,20 @@ defaults:
     realname:   "Subhaditya Nath"
 
 servers:
+    *   name: "znc"
+        hostname: "pi4.lan"
+        port: 0
+        tls: yes
+        tls-verify: no
+        autoconnect: yes
+        nick: "subnut"
+        password: "..."
+        connect-cmds: ["znc-playback ${disconnect|0:00}"]
+        message-hooks: * ["buffextras","debug"]
+
     *   name: "libera"
         hostname: "irc.libera.chat"
-        autoconnect: yes
+        -- autoconnect: yes
         tls: yes
         sasl:
             username: "..."
@@ -69,5 +80,5 @@ palette:
         *   0x2a
         *   0xa7
 
--- vim: sw=4 et ts=4 sts=4 ft=config-value
+-- vim: sw=4 et ts=4 sts=4 ft=config-value cms=--%s
 -- vim syntax file: https://raw.githubusercontent.com/glguy/config-value/master/config-value.vim

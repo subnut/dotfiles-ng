@@ -5,14 +5,21 @@ alias l='ls -lA'
 alias shrug="printf %s '¯\_(ツ)_/¯'"
 alias exists='command -v >/dev/null'
 
-## Add ~/.local/bin to $PATH
-# NOTE: We use :$PATH: to handle if the required path is in start or end of $PATH
+## Add ~/.local/bin to PATH
+# NOTE: We use :$PATH: to handle if the required path is at start or end of $PATH
 # See: https://unix.stackexchange.com/a/32054
 echo ":$PATH:" | grep -Fq ":$HOME/.local/bin:" ||
     export PATH=$HOME/.local/bin:$PATH
 
-exists yt-dlp &&
-    alias yt-dlp='yt-dlp -N 8'
+## Check --color support in `ls`
+# NOTE: Should come *after* we've added ~/.local/bin to PATH
+2>/dev/null 1>&2 {
+    ls --color &&
+    test "$(ls --color)" != "$(ls -- --color)"  &&
+    alias ls='ls --color'
+}
+
+
 exists curl &&
     alias curl='curl --parallel --parallel-immediate'
 exists zsh &&
@@ -21,9 +28,36 @@ exists sway &&
     alias swayprop="$HOME/.config/sway/swayprop"
 exists ssh-agent &&
     alias withssh='SSH_AUTH_SOCK=$_SSH_AUTH_SOCK SSH_AGENT_PID=$_SSH_AGENT_PID'
-exists ssh && echo "$TERM" | grep -Eq 'alacritty|foot|xterm-kitty' &&
-    alias ssh='TERM=xterm-256color ssh'
 
+exists firefox && {
+    export MOZ_WEBRENDER=1
+    export MOZ_ACCELERATED=1
+}
+exists yt-dlp && {
+    if exists ffmpeg; then
+        alias yt-dlp='yt-dlp -N 8'
+    else
+        alias yt-dlp=yt_dlp
+        yt_dlp() {
+            exists ffmpeg && {
+                unset -f yt_dlp
+                alias yt-dlp='yt-dlp -N 8'
+                yt-dlp "$@"
+                return $?
+            }
+            echo FFmpeg not found
+            echo Please install FFmpeg for best quality download
+        }
+    fi
+}
+exists ssh && {
+    alias ssh=ssh_
+    ssh_() {
+        test -t 1 && _should_tty=-t
+        echo "$TERM" | grep -Eq 'alacritty|foot|xterm-kitty' &&
+            TERM=xterm-256color ssh $_should_tty "$@"
+    }
+}
 exists fzf && {
     export FZF_DEFAULT_OPTS="--ansi \
     --color light \
@@ -35,18 +69,13 @@ exists fzf && {
         _fzf_compgen_dir() {
           fd --type d --hidden --follow --exclude ".git" . "$1"
         }
-        # Use fd (https://github.com/sharkdp/fd) instead of the default find
-        # command for listing path candidates.
+        # Use fd instead of the default find command for listing path candidates
         # - The first argument to the function ($1) is the base path to start traversal
         # - See the source code (completion.{bash,zsh}) for the details.
         _fzf_compgen_path() {
           fd --hidden --follow --exclude ".git" . "$1"
         }
     }
-}
-exists firefox && {
-    export MOZ_WEBRENDER=1
-    export MOZ_ACCELERATED=1
 }
 exists git && {
     alias g=git
@@ -62,6 +91,7 @@ exists git && {
     gcma() { git commit -va -m "$*"; }
     alias gp='git push'
     alias gpull='git pull'
+    alias gfetch='git fetch'
     alias gpfwl='git push --force-with-lease'
     gpf() {
         echo >&2 DO NOT USE --force
@@ -97,6 +127,14 @@ exists cal && {
     alias cal1='cal -1'
     alias caly='cal -y'
 }
+# exists doas && exists sudo && {
+#     doas_() {
+#         if ! [ "$(command -p doas -C /etc/doas.conf "$@")" = deny ]
+#         then sudo "$@"
+#         else doas "$@"
+#         fi
+#     }; alias doas=doas_
+# }
 
 exists batt || alias batt=battery
 battery() {
