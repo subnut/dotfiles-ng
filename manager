@@ -85,6 +85,7 @@ _save() {
     run save ~/.gitconfig
     run save ~/.zsh
     run save ~/.ssh/config
+    run save ~/.config/alacritty
     run save ~/.config/bat
     run save ~/.config/fontconfig
     run save ~/.config/foot
