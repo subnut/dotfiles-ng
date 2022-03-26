@@ -276,10 +276,15 @@ elseif has('unix')
                 \|endif
         aug END
     elseif executable('wl-copy') && !empty($WAYLAND_DISPLAY)
+        "" XXX: It's broken right now. YAGNI, I guess?
+        " nnoremap <expr> P v:register == '"' ? '<cmd>let @" = system("wl-paste -n")<CR>'.v:count.'P' : v:count.v:register.'p'
+        " nnoremap <expr> p v:register == '"' ? '<cmd>let @" = system("wl-paste -n")<CR>'.v:count.'p' : v:count.v:register.'p'
+        " vnoremap <expr> P v:register == '"' ? '<cmd>let @" = system("wl-paste -n")<CR>P' : v:register.'p'
+        " vnoremap <expr> p v:register == '"' ? '<cmd>let @" = system("wl-paste -n")<CR>p' : v:register.'p'
         aug YankToClipboard
             au!
-            au TextYankPost *
-                \ if v:event.regname ==# '' && v:event.regtype =~ "\<C-V>"
+            au TextYankPost * if v:event.regname ==# ''
+                \|if v:event.regtype =~ "\<C-V>"
                     \|silent! call system(
                         \'wl-copy',
                         \ join(v:event.regcontents, "\n")
@@ -290,13 +295,14 @@ elseif has('unix')
                         \ v:event.regcontents[0] . "\n"
                     \)
                 \|endif
+            \|endif
         aug END
     endif
 endif
 " }}}
 " Terminal quirks {{{
 " Bracketed paste support
-if $TERM =~ 'st-256color\|foot'
+if $TERM =~ 'alacritty\|foot\|st-256color'
     let &t_BE = "\<Esc>[?2004h"
     let &t_BD = "\<Esc>[?2004l"
     let &t_PS = "\<Esc>[200~"
@@ -310,7 +316,7 @@ if $TERM =~ 'alacritty\|foot'
 endif
 
 ":h xterm-true-color
-if $TERM =~ 'st-256color\|foot'
+if $TERM =~ 'foot\|st-256color'
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 elseif $TERM =~ 'alacritty'
