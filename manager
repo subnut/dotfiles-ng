@@ -104,10 +104,11 @@ _save() {
 
     run rm -rf root
     run save /etc/doas.conf
-    run save /etc/elogind/logind.conf.d/custom.conf
-    run save /etc/tlp.d/BAT0.conf
+    run save /etc/rc.local
     run save /etc/acpi/handler.sh
+    run save /etc/tlp.d/BAT0.conf
     run save /etc/sudoers.d/allow_wheel
+    run save /etc/elogind/logind.conf.d/custom.conf
 
     run save_pkglist
 }
