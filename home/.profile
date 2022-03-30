@@ -11,6 +11,7 @@ exists zsh &&
 printf '%s' "Run $wm? [Y/n] "; read ANSWER
 [ -z "$ANSWER" ] || printf '%s' "$ANSWER" | grep -q '^[Yy]' && {
   export GDK_BACKEND=wayland
+  export QT_QPA_PLATFORM=wayland  # needs qt5-wayland installed
   exists firefox &&
     export MOZ_ENABLE_WAYLAND=1
 

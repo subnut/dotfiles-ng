@@ -13,11 +13,9 @@ echo ":$PATH:" | grep -Fq ":$HOME/.local/bin:" ||
 
 ## Check --color support in `ls`
 # NOTE: Should come *after* we've added ~/.local/bin to PATH
-2>/dev/null 1>&2 {
-    ls --color &&
-    test "$(ls --color)" != "$(ls -- --color)"  &&
-    alias ls='ls --color'
-}
+{ ls --color=auto && test "$(ls --color=auto)" != "$(ls -- --color=auto)" &&
+    alias ls='ls --color=auto'
+} 2>/dev/null 1>&2
 
 
 exists curl &&

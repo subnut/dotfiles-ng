@@ -257,47 +257,47 @@ vmap <Plug>(MyCommentor) <ESC>'<<Plug>(MyCommentor)'>
 if has('xterm_clipboard') && has('unnamedplus')
     set clipboard=unnamedplus
 elseif has('unix')
-    " NOTE: We check for +unix because the system() function is available only
-    " on unix.
-    if executable('xclip') && !empty($DISPLAY)
-        aug YankToClipboard
-            au!
-            au TextYankPost *
-                \ if v:event.regname ==# '' && v:event.regtype =~ "\<C-V>"
-                    \|silent! call system(
-                        \'xclip -in -sel clipboard',
-                        \ join(v:event.regcontents, "\n")
-                    \)
-                \|elseif v:event.regtype ==? 'v'
-                    \| silent! call system(
-                        \'xclip -in -sel clipboard',
-                        \ v:event.regcontents[0] . "\n"
-                    \)
-                \|endif
-        aug END
-    elseif executable('wl-copy') && !empty($WAYLAND_DISPLAY)
-        "" XXX: It's broken right now. YAGNI, I guess?
-        " nnoremap <expr> P v:register == '"' ? '<cmd>let @" = system("wl-paste -n")<CR>'.v:count.'P' : v:count.v:register.'p'
-        " nnoremap <expr> p v:register == '"' ? '<cmd>let @" = system("wl-paste -n")<CR>'.v:count.'p' : v:count.v:register.'p'
-        " vnoremap <expr> P v:register == '"' ? '<cmd>let @" = system("wl-paste -n")<CR>P' : v:register.'p'
-        " vnoremap <expr> p v:register == '"' ? '<cmd>let @" = system("wl-paste -n")<CR>p' : v:register.'p'
-        aug YankToClipboard
-            au!
-            au TextYankPost * if v:event.regname ==# ''
-                \|if v:event.regtype =~ "\<C-V>"
-                    \|silent! call system(
-                        \'wl-copy',
-                        \ join(v:event.regcontents, "\n")
-                    \)
-                \|elseif v:event.regtype ==? 'v'
-                    \| silent! call system(
-                        \'wl-copy',
-                        \ v:event.regcontents[0] . "\n"
-                    \)
-                \|endif
-            \|endif
-        aug END
-    endif
+""""    " NOTE: We check for +unix because the system() function is available only
+""""    " on unix.
+""""    if executable('xclip') && !empty($DISPLAY)
+""""        aug YankToClipboard
+""""            au!
+""""            au TextYankPost *
+""""                \ if v:event.regname ==# '' && v:event.regtype =~ "\<C-V>"
+""""                    \|silent! call system(
+""""                        \'xclip -in -sel clipboard',
+""""                        \ join(v:event.regcontents, "\n")
+""""                    \)
+""""                \|elseif v:event.regtype ==? 'v'
+""""                    \| silent! call system(
+""""                        \'xclip -in -sel clipboard',
+""""                        \ v:event.regcontents[0] . "\n"
+""""                    \)
+""""                \|endif
+""""        aug END
+""""    elseif executable('wl-copy') && !empty($WAYLAND_DISPLAY)
+""""        "" XXX: It's broken right now. YAGNI, I guess?
+""""        " nnoremap <expr> P v:register == '"' ? '<cmd>let @" = system("wl-paste -n")<CR>'.v:count.'P' : v:count.v:register.'p'
+""""        " nnoremap <expr> p v:register == '"' ? '<cmd>let @" = system("wl-paste -n")<CR>'.v:count.'p' : v:count.v:register.'p'
+""""        " vnoremap <expr> P v:register == '"' ? '<cmd>let @" = system("wl-paste -n")<CR>P' : v:register.'p'
+""""        " vnoremap <expr> p v:register == '"' ? '<cmd>let @" = system("wl-paste -n")<CR>p' : v:register.'p'
+""""        aug YankToClipboard
+""""            au!
+""""            au TextYankPost * if v:event.regname ==# ''
+""""                \|if v:event.regtype =~ "\<C-V>"
+""""                    \|silent! call system(
+""""                        \'wl-copy',
+""""                        \ join(v:event.regcontents, "\n")
+""""                    \)
+""""                \|elseif v:event.regtype ==? 'v'
+""""                    \| silent! call system(
+""""                        \'wl-copy',
+""""                        \ v:event.regcontents[0] . "\n"
+""""                    \)
+""""                \|endif
+""""            \|endif
+""""        aug END
+""""    endif
 endif
 " }}}
 " Terminal quirks {{{
