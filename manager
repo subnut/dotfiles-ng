@@ -71,10 +71,22 @@ save_glirc_config() {
 save_pkglist() {
     # Void linux
     command -v xbps-query >/dev/null 2>/dev/null && {
-        rm -f pkglist/void
-        for pkg in $(xbps-query -m)
-        do echo "${pkg%-*}" >> pkglist/void
-        done
+        # rm -f pkglist/void
+        # for pkg in $(xbps-query -m)
+        # do echo "${pkg%-*}" >> pkglist/void
+        # done
+        unset script regex
+        rm -f pkglist/void pkglist/void_custom
+        script="$(xbps-query -L | cut -d ' ' -f 2 | while read repo; do
+            printf '%s' "\#: $repo#d;"
+        done)"; script="${script%;};s/-[^-]*: .*//"
+        xbps-query -p repository --regex -s . |
+            sed "$script" >> pkglist/void_custom
+        regex="$(cat pkglist/void_custom | while read pkg; do
+            printf '%s' "$pkg|"
+        done)"; regex="^(${regex%|})"
+        xbps-query -m | grep -vE "$regex" | sed 's/-[^-]*$//' >> pkglist/void
+        unset script regex
     }
 }
 
@@ -162,7 +174,7 @@ elif [ ! $IS_TTY ]; then
 else
     run() {
         CMD="$(echo "$*" | sed "s;$HOME;\$HOME;g")"
-        echo "[${FG_YELLOW}WAIT${RESET}] $CMD"
+        echo "[${FG_YELLOW}${BOLD}WAIT${RESET}] $CMD"
         "$@" 1>stdout 2>stderr
         if [ $? -eq 0 ]
         then printf "${CSI}1A${CSI}1G[${FG_GREEN}%s${RESET}]\n"        ' OK '

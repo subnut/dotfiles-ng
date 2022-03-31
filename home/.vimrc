@@ -114,12 +114,14 @@ endfun
 command! GetHiGroup echo GetHiGroup()
 "}}}
 " Show Trailing Spaces {{{
-hi TrailingWhitespace term=standout ctermfg=red ctermbg=red guifg=red guibg=red
+" hi TrailingWhitespace term=standout ctermfg=red ctermbg=red guifg=red guibg=red
+hi link TrailingWhitespace Error
 let w:trailing_whitespace = matchadd('TrailingWhitespace', '\s\+$')
 aug TrailingWhitespace
     au!
-    au ColorScheme * hi TrailingWhitespace
-                \ term=standout ctermfg=red ctermbg=red guifg=red guibg=red
+    " au ColorScheme * hi TrailingWhitespace
+    "             \ term=standout ctermfg=red ctermbg=red guifg=red guibg=red
+    au ColorScheme * hi link TrailingWhitespace Error
     au WinNew * let w:trailing_whitespace
                 \ = matchadd('TrailingWhitespace', '\s\+$')
 aug END

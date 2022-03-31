@@ -10,6 +10,8 @@ macros:
         commands: "say ¯\\_(ツ)_/¯"
     *   name: "back"
         commands: "away"
+    *   name: "busy"
+        commands: "away busy"
 
 key-bindings:
     *   bind: "F1"
@@ -50,10 +52,10 @@ servers:
             *   "subnut"
             *   "snath03"
         connect-cmds:
-            *   "join #glirc"
             *   "join #libera"
-            *   "join #voidlinux"
-            *   "join #temp"
+            -- *   "join #glirc"
+            -- *   "join #voidlinux"
+            -- *   "join #temp"
 
 palette:
     meta: 0x07
