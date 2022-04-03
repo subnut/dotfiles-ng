@@ -1,7 +1,8 @@
 export EDITOR=vi
 alias :q=exit
 
-alias l='ls -lA'
+# alias l='ls -lA'
+alias l='ls -lAh'
 alias shrug="printf %s '¯\_(ツ)_/¯'"
 alias exists='command -v >/dev/null'
 
@@ -26,6 +27,8 @@ exists sway &&
     alias swayprop="$HOME/.config/sway/swayprop"
 exists ssh-agent &&
     alias withssh='SSH_AUTH_SOCK=$_SSH_AUTH_SOCK SSH_AGENT_PID=$_SSH_AGENT_PID'
+exists rg &&
+    alias rg='rg --no-heading'
 
 exists firefox && {
     export MOZ_WEBRENDER=1

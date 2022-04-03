@@ -31,13 +31,13 @@
   },
   "battery": {
     // "full-at": 80,   // Might scare ya
-    "format-not": " {capacity}%",  // "Not charging" -> "not"
+    // "format-not": " {capacity}%",       // (upto 0.9.9)  "Not charging" -> "not"
+    "format-not-charging": " {capacity}%", // (from 0.9.10) "Not charging" -> "not-charging"
     // "format-charging": "{capacity}% <small>({time})</small> ",  // needs fontawesome5
     "format-charging": " {capacity}% <small>({time})</small>",
     "format-discharging": "{capacity}% <small>({time})</small>",
     "format-time": "{H}h {M}m",
     "format": "{capacity}%",  // Default -- if neither charging nor discharging
-    "tooltip": false,
     "states": {
       "full": 80,
       "good": 70,
