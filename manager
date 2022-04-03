@@ -84,8 +84,8 @@ save_pkglist() {
             sed "$script" >> pkglist/void_custom
         regex="$(cat pkglist/void_custom | while read pkg; do
             printf '%s' "$pkg|"
-        done)"; regex="^(${regex%|})"
-        xbps-query -m | grep -vE "$regex" | sed 's/-[^-]*$//' >> pkglist/void
+        done)"; regex="^(${regex%|})$"
+        xbps-query -m | sed 's/-[^-]*$//' | grep -vE "$regex" >> pkglist/void
         unset script regex
     }
 }
