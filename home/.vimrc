@@ -345,6 +345,9 @@ aug delayed_plug_load
     au!
 aug END
 call plug#begin('~/.config/nvim/plugged')
+Plug 'junegunn/fzf.vim', {'on':[]}
+    au delayed_plug_load BufEnter * ++once if exists(':FZF') == 2 |
+                \ call timer_start(0, {->plug#load('fzf.vim')}) | endif
 Plug 'editorconfig/editorconfig-vim'
     let g:EditorConfig_exclude_patterns = ['^[[:alpha:]]*://.*']
     let g:EditorConfig_exec_path = exepath('editorconfig')
@@ -358,6 +361,7 @@ Plug 'ziglang/zig.vim', {'for': 'zig'}
 
 " Improve editing experience
 Plug 'guns/vim-sexp'
+Plug 'wsdjeg/vim-fetch'
 Plug 'subnut/visualstar.vim'
     au delayed_plug_load BufEnter * ++once
                 \ call timer_start(0, {->plug#load('visualstar.vim')})

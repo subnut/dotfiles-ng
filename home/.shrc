@@ -27,22 +27,25 @@ exists sway &&
     alias swayprop="$HOME/.config/sway/swayprop"
 exists ssh-agent &&
     alias withssh='SSH_AUTH_SOCK=$_SSH_AUTH_SOCK SSH_AGENT_PID=$_SSH_AGENT_PID'
-exists rg &&
-    alias rg='rg --no-heading'
 
+exists rg && {
+    alias rg='rg --no-heading'
+    alias rgs='rg -s'   # case-sensitive
+    alias rgi='rg -i'   # case-insensitive
+}
 exists firefox && {
     export MOZ_WEBRENDER=1
     export MOZ_ACCELERATED=1
 }
 exists yt-dlp && {
     if exists ffmpeg; then
-        alias yt-dlp='yt-dlp -N 8'
+        alias yt-dlp='yt-dlp -N 4'
     else
         alias yt-dlp=yt_dlp
         yt_dlp() {
             exists ffmpeg && {
                 unset -f yt_dlp
-                alias yt-dlp='yt-dlp -N 8'
+                alias yt-dlp='yt-dlp -N 4'
                 yt-dlp "$@"
                 return $?
             }

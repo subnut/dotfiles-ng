@@ -1,4 +1,3 @@
-Waybar
 age
 alacritty
 alsa-pipewire
@@ -41,9 +40,11 @@ linux-headers
 lsof
 man-pages-devel
 man-pages-posix
+massren
 mediainfo-cli
-mongoose-devel
 mpv
+musikcube
+musikcube-pipewire
 ncdu
 neovim
 neovim-qt
