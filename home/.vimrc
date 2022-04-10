@@ -20,7 +20,18 @@ set fileformats=unix,dos
 setg nowrap
 setg encoding=utf-8
 setg matchpairs+=<:>
-setg listchars=eol:$,tab:>-
+setg listchars=trail:-,nbsp:+
+
+setg listchars+=eol:~
+" setg listchars+=eol:-
+" setg listchars+=eol:$
+
+setg listchars+=tab:>-
+" setg listchars+=tab:<->
+
+setg listchars+=precedes:<,extends:>
+" setg listchars+=precedes:\\u2190,extends:\\u2192    " left and right arrows
+" setg listchars+=precedes:\\u2026,extends:\\u2026    " horizontal ellipsis
 
 let g:showbreak_candidates = ['↳ ', '↪ ', '⤷ ', '⮡ ', '¬ ']
 let &g:showbreak = g:showbreak_candidates[2]    " NOTE: Index starts from 0
@@ -32,6 +43,7 @@ map <3-MiddleMouse> <Nop>
 map <4-MiddleMouse> <Nop>
 
 let mapleader = ' '
+noremap  <leader>y "+
 nnoremap <leader>l <cmd>set list!<CR>
 nnoremap <leader>b :ls<CR>:b<Space>
 
@@ -256,50 +268,30 @@ vmap <Plug>(MyCommentor) <ESC>'<<Plug>(MyCommentor)'>
 "}}}
 "}}}
 " Copy to clipboard {{{
-if has('xterm_clipboard') && has('unnamedplus')
-    set clipboard=unnamedplus
-elseif has('unix')
-""""    " NOTE: We check for +unix because the system() function is available only
-""""    " on unix.
-""""    if executable('xclip') && !empty($DISPLAY)
-""""        aug YankToClipboard
-""""            au!
-""""            au TextYankPost *
-""""                \ if v:event.regname ==# '' && v:event.regtype =~ "\<C-V>"
-""""                    \|silent! call system(
-""""                        \'xclip -in -sel clipboard',
-""""                        \ join(v:event.regcontents, "\n")
-""""                    \)
-""""                \|elseif v:event.regtype ==? 'v'
-""""                    \| silent! call system(
-""""                        \'xclip -in -sel clipboard',
-""""                        \ v:event.regcontents[0] . "\n"
-""""                    \)
-""""                \|endif
-""""        aug END
-""""    elseif executable('wl-copy') && !empty($WAYLAND_DISPLAY)
-""""        "" XXX: It's broken right now. YAGNI, I guess?
-""""        " nnoremap <expr> P v:register == '"' ? '<cmd>let @" = system("wl-paste -n")<CR>'.v:count.'P' : v:count.v:register.'p'
-""""        " nnoremap <expr> p v:register == '"' ? '<cmd>let @" = system("wl-paste -n")<CR>'.v:count.'p' : v:count.v:register.'p'
-""""        " vnoremap <expr> P v:register == '"' ? '<cmd>let @" = system("wl-paste -n")<CR>P' : v:register.'p'
-""""        " vnoremap <expr> p v:register == '"' ? '<cmd>let @" = system("wl-paste -n")<CR>p' : v:register.'p'
-""""        aug YankToClipboard
-""""            au!
-""""            au TextYankPost * if v:event.regname ==# ''
-""""                \|if v:event.regtype =~ "\<C-V>"
-""""                    \|silent! call system(
-""""                        \'wl-copy',
-""""                        \ join(v:event.regcontents, "\n")
-""""                    \)
-""""                \|elseif v:event.regtype ==? 'v'
-""""                    \| silent! call system(
-""""                        \'wl-copy',
-""""                        \ v:event.regcontents[0] . "\n"
-""""                    \)
-""""                \|endif
-""""            \|endif
-""""        aug END
-""""    endif
+if !(has('xterm_clipboard') && has('unnamedplus')) " use <leader>y
+    noremap <leader>y <cmd>call SyncClipboard()<CR>"z
+    aug YankToClipboard
+        au!
+        au TextYankPost * if v:event.regname ==# 'z' | call CopyToClipboard(
+                    \join(v:event.regcontents, "\n"))| endif
+    aug END
+    if has('unix')
+        if executable('xclip') && !empty($DISPLAY)
+            fun! CopyToClipboard(text)
+                silent! call system('xclip -in -sel clipboard', a:text)
+            endfun
+            fun! SyncClipboard()
+                let @z = system('xclip -out -sel clipboard')
+            endfun
+        elseif executable('wl-copy') && !empty($WAYLAND_DISPLAY)
+            fun! CopyToClipboard(text)
+                silent! call system('wl-copy', a:text)
+            endfun
+            fun! SyncClipboard()
+                let @z = system('wl-paste')
+            endfun
+        endif
+    endif
 endif
 " }}}
 " Terminal quirks {{{
