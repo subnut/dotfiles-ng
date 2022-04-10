@@ -289,6 +289,11 @@ if !(has('xterm_clipboard') && has('unnamedplus')) " use <leader>y
             endfun
             fun! SyncClipboard()
                 let @z = system('wl-paste')
+                if count(@z, nr2char(10)) == 1
+                    let @z = trim(@z, nr2char(10), 2)
+                else
+                    let @z = trim(@z, nr2char(10), 2) . nr2char(10)
+                endif
             endfun
         endif
     endif
