@@ -1,3 +1,4 @@
+Waybar
 age
 alacritty
 alsa-pipewire
@@ -41,6 +42,7 @@ lsof
 man-pages-devel
 man-pages-posix
 massren
+maxima
 mediainfo-cli
 mpv
 musikcube
@@ -78,6 +80,7 @@ strace
 sway
 swayidle
 swaylock
+syncthing
 tcc
 tlp
 tmux

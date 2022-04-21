@@ -4,4 +4,6 @@
 # (see /etc/runit/2).
 command -v bluetooth >/dev/null 2>/dev/null &&
 	bluetooth off
+
+chvt 2
 # vim: ft=sh

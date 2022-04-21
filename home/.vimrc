@@ -134,8 +134,8 @@ aug TrailingWhitespace
     " au ColorScheme * hi TrailingWhitespace
     "             \ term=standout ctermfg=red ctermbg=red guifg=red guibg=red
     au ColorScheme * hi link TrailingWhitespace Error
-    au WinNew * let w:trailing_whitespace
-                \ = matchadd('TrailingWhitespace', '\s\+$')
+    au WinNew * let w:trailing_whitespace =
+                \ matchadd('TrailingWhitespace', '\s\+$')
 aug END
 com! TrailingWhitespace
             \ if w:trailing_whitespace
@@ -143,19 +143,18 @@ com! TrailingWhitespace
                 \|let w:trailing_whitespace = 0
             \|else
                 \|let w:trailing_whitespace =
-                    \matchadd('TrailingWhitespace', '\s\+$')
+                    \ matchadd('TrailingWhitespace', '\s\+$')
             \|endif
-" XXX: Experimental
 let g:TrailingWhitespaceExcludedFileTypes = [
-            \ 'gitcommit',
+            \ 'diff',
             \ 'markdown',
             \ 'fugitive',
+            \ 'gitcommit',
             \]
-" XXX: Experimental
 au TrailingWhitespace FileType *
-            \if (index(g:TrailingWhitespaceExcludedFileTypes, &l:filetype) != -1) |
-            \exe 'au TrailingWhitespace BufWinEnter <buffer> TrailingWhitespace' |
-            \endif
+            \ if (index(g:TrailingWhitespaceExcludedFileTypes, &l:filetype) != -1) |
+            \ exe 'au TrailingWhitespace BufWinEnter <buffer> TrailingWhitespace' |
+            \ endif
 " }}}
 " Colorcolumn customizations {{{
 command! ColorColumnToggle       call ColorColumnToggle(1)
@@ -342,6 +341,7 @@ aug delayed_plug_load
     au!
 aug END
 call plug#begin('~/.config/nvim/plugged')
+Plug 'wsdjeg/vim-fetch'
 Plug 'junegunn/fzf.vim', {'on':[]}
     au delayed_plug_load BufEnter * ++once if exists(':FZF') == 2 |
                 \ call timer_start(0, {->plug#load('fzf.vim')}) | endif
@@ -353,12 +353,14 @@ Plug 'editorconfig/editorconfig-vim'
                                     \: 'vim_core'
 
 " language support
-Plug 'zah/nim.vim',     {'for': 'nim'}
-Plug 'ziglang/zig.vim', {'for': 'zig'}
+Plug 'zah/nim.vim',             {'for': 'nim'}
+Plug 'ziglang/zig.vim',         {'for': 'zig'}
+Plug 'isobit/vim-caddyfile',    {'for': 'caddyfile'}
 
 " Improve editing experience
-Plug 'guns/vim-sexp'
-Plug 'wsdjeg/vim-fetch'
+Plug 'guns/vim-sexp'            " lisp
+Plug 'alvan/vim-closetag'       " html tags
+Plug 'itmammoth/doorboy.vim'    "`' () [] {}
 Plug 'subnut/visualstar.vim'
     au delayed_plug_load BufEnter * ++once
                 \ call timer_start(0, {->plug#load('visualstar.vim')})
