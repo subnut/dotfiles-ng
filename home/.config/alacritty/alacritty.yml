@@ -21,6 +21,12 @@ fonts: #[1
       y: 0
     normal:
       family: Fantasque Sans Mono
+  Rec Mono Custom: &Rec-Mono-Custom #[2
+    size: 15.0
+    offset:
+      x: -3
+    normal:
+      family: Rec Mono Custom
 #]1
 colorschemes: #[1
   Iceberg Light: &iceberg-light #[2
@@ -70,8 +76,8 @@ colorschemes: #[1
 #]1
 
 live_config_reload: true
-font: *IBM-Plex-Mono
-colors: *iceberg-light
+font: *Rec-Mono-Custom
+colors: *urxvt
 
 key_bindings:
   - key: N

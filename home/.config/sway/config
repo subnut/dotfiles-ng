@@ -107,6 +107,12 @@ bindsym XF86Display exec sleep 0.5 && pkill -USR1 swayidle
 # bindsym XF86AudioMute        exec pactl set-sink-mute   @DEFAULT_SINK@   toggle
 # bindsym XF86AudioMicMute     exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
 
+## Don't pass these to clients (applications)
+bindsym XF86AudioLowerVolume nop
+bindsym XF86AudioRaiseVolume nop
+bindsym XF86AudioMute        nop
+bindsym XF86AudioMicMute     nop
+
 #
 # Basics:
 #

@@ -333,7 +333,6 @@ if $TERM == 'foot'
 endif
 "}}}
 
-
 if !empty(glob('~/.vim/autoload/plug.vim'))
 " Plugins {{{
 " -------
@@ -361,6 +360,7 @@ Plug 'isobit/vim-caddyfile',    {'for': 'caddyfile'}
 Plug 'guns/vim-sexp'            " lisp
 Plug 'alvan/vim-closetag'       " html tags
 Plug 'itmammoth/doorboy.vim'    "`' () [] {}
+    let g:doorboy_additional_brackets = #{c:['<>']}
 Plug 'subnut/visualstar.vim'
     au delayed_plug_load BufEnter * ++once
                 \ call timer_start(0, {->plug#load('visualstar.vim')})
@@ -400,8 +400,20 @@ Plug 'psf/black', { 'branch': 'stable', 'on': [] }
     aug END
 
 " themes
-Plug 'NLKNguyen/papercolor-theme'
 Plug 'cocopon/iceberg.vim'
+Plug 'NLKNguyen/papercolor-theme'
+    let g:PaperColor_Theme_Options = #{
+                \   theme: #{
+                \       default: #{
+                \           allow_bold: 1,
+                \           allow_italic: 1,
+                \       }
+                \   },
+                \   language: #{
+                \       c: #{highlight_builtins:1},
+                \       python: #{highlight_builtins:1},
+                \   }
+                \}
 Plug 'sainnhe/gruvbox-material'
     let g:gruvbox_material_better_performance = 1
     let g:gruvbox_material_sign_column_background = 'none'
@@ -434,6 +446,15 @@ if $TERM =~ 'st-256color'
     set termguicolors
     colorscheme gruvbox-material
 endif
+
+
+" See: https://github.com/kovidgoyal/kitty/issues/108#issuecomment-320492663
+"
+" Vim hardcodes background color erase even if the terminfo file does not
+" contain bce (not to mention that libvte based terminals incorrectly contain
+" bce in their terminfo files). This causes incorrect background rendering
+" when using a colorscheme with a non-transparent background.
+set t_ut=
 
 
 " vim:et:ts=4:sts=4:sw=0:fdm=marker
