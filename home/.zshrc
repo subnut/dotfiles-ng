@@ -47,6 +47,7 @@ preexec_functions+=title_preexec
 export ZDOTDIR=${ZDOTDIR-$HOME}
 source $ZDOTDIR/.zsh/prompt.zsh
 source $ZDOTDIR/.zsh/keybindings.zsh
+source $ZDOTDIR/.zsh/named_directories.zsh
 
 
 ## oh-my-zsh scripts
