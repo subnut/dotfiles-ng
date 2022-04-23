@@ -341,6 +341,13 @@ aug delayed_plug_load
 aug END
 call plug#begin('~/.config/nvim/plugged')
 Plug 'wsdjeg/vim-fetch'
+Plug 'ojroques/vim-oscyank'
+    let g:oscyank_silent = 1
+    noremap  <leader>Y "y
+    aug oscyank
+        au!
+        au TextYankPost * if v:event.regname ==# 'y' | OSCYankReg y | endif
+    aug END
 Plug 'junegunn/fzf.vim', {'on':[]}
     au delayed_plug_load BufEnter * ++once if exists(':FZF') == 2 |
                 \ call timer_start(0, {->plug#load('fzf.vim')}) | endif
