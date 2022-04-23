@@ -28,6 +28,18 @@ exists sway &&
 exists ssh-agent &&
     alias withssh='SSH_AUTH_SOCK=$_SSH_AUTH_SOCK SSH_AGENT_PID=$_SSH_AGENT_PID'
 
+exists editorconfig && {
+    exists bat && {
+        alias bat=bat_
+        bat_() {
+            if [ $# = 1 ] &&  editorconfig "$(pwd)/$1" | grep -q tab_width; then
+                bat --tabs "$(editorconfig "$(pwd)/$1" | grep tab_width | cut -d= -f2)" "$1"
+            else
+                bat "$@"
+            fi
+        }
+    }
+}
 exists rg && {
     alias rg='rg --no-heading'
     alias rgs='rg -s'   # case-sensitive
