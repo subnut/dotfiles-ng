@@ -30,13 +30,21 @@ exists ssh-agent &&
 
 exists editorconfig && {
     exists bat && {
-        alias bat=bat_
-        bat_() {
-            if [ $# = 1 ] &&  editorconfig "$(pwd)/$1" | grep -q tab_width; then
-                bat --tabs "$(editorconfig "$(pwd)/$1" | grep tab_width | cut -d= -f2)" "$1"
-            else
-                bat "$@"
-            fi
+        batview() {
+            {
+                _BAT_FLAGS=
+                for file in "$@"; do
+                    if ! test -f "$file" ; then
+                        _BAT_FLAGS="$_BAT_FLAGS $file"
+                        continue
+                    fi
+                    if editorconfig "$(pwd)/$file" | grep -Fq tab_width; then
+                        bat -f --tabs "$(editorconfig "$(pwd)/$file" | grep -F tab_width | cut -d = -f 2)" "$file"
+                    else
+                        bat -f "$file"
+                    fi
+                done
+            } | less -RFS
         }
     }
 }
@@ -214,4 +222,4 @@ exists abduco && {
 }
 
 true
-# vim: et sw=4 sts=4 ts=4 ft=sh
+# vim: et sw=4 sts=4 ts=4 ft=sh nowrap
