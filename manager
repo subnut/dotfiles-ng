@@ -92,24 +92,25 @@ save_pkglist() {
 
 _save() {
     run rm -rf home
-    run save ~/.shrc
-    run save ~/.zshrc
-    run save ~/.vimrc
-    run save ~/.profile
     run save ~/.gitconfig
+    run save ~/.profile
+    run save ~/.shrc
+    run save ~/.vimrc
+    run save ~/.tmux.conf
     run save ~/.zsh
+    run save ~/.zshrc
     run save ~/.ssh/config
     run save ~/.config/alacritty
     run save ~/.config/bat
     run save ~/.config/fontconfig
     run save ~/.config/foot
+    run save ~/.config/gtk-3.0
     run save ~/.config/htop
     run save ~/.config/lf
     run save ~/.config/sway
     run save ~/.config/swaylock
     run save ~/.config/waybar
     run save ~/.config/zathura
-    run save ~/.config/gtk-3.0
 
     run save_glirc_config
     run save ~/.vty
