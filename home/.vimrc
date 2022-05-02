@@ -341,13 +341,6 @@ aug delayed_plug_load
 aug END
 call plug#begin('~/.config/nvim/plugged')
 Plug 'wsdjeg/vim-fetch'
-Plug 'ojroques/vim-oscyank'
-    let g:oscyank_silent = 1
-    noremap  <leader>Y "y
-    aug oscyank
-        au!
-        au TextYankPost * if v:event.regname ==# 'y' | OSCYankReg y | endif
-    aug END
 Plug 'junegunn/fzf.vim', {'on':[]}
     au delayed_plug_load BufEnter * ++once if exists(':FZF') == 2 |
                 \ call timer_start(0, {->plug#load('fzf.vim')}) | endif
@@ -405,6 +398,19 @@ Plug 'psf/black', { 'branch': 'stable', 'on': [] }
         au!
         au BufWritePre * exe (&l:ft == 'python' ? 'Black' : '')
     aug END
+
+" Copy to clipboard using OSC 52 - mapped to <leader>Y
+Plug 'ojroques/vim-oscyank'
+    let g:oscyank_silent = 1
+    noremap  <leader>Y "y
+    aug oscyank
+        au!
+        au TextYankPost * if v:event.regname ==# 'y' | OSCYankReg y | endif
+    aug END
+
+"" Show diff between swapfile and file on disk
+"Plug 'chrisbra/recover.vim'
+"    let g:RecoverPlugin_Prompt_Verbose = 1
 
 " themes
 Plug 'cocopon/iceberg.vim'
