@@ -118,4 +118,4 @@ source $ZDOTDIR/.zsh/OMZ_snippets/clipboard.zsh
     }
 }
 
-# vim: fdm=marker nowrap sw=0 ts=4 sts=4 et
+# vim: nowrap sw=0 ts=4 sts=4 et

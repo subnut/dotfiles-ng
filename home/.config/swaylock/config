@@ -1,5 +1,5 @@
 ignore-empty-password
-disable-caps-lock-text
+show-failed-attempts
 color=00000088
 indicator-idle-visible
 indicator-radius=100
@@ -7,3 +7,5 @@ inside-color=dddddd
 line-uses-inside
 ring-color=dddddd
 separator-color=dddddd
+text-color=000000
+text-caps-lock-color=660000

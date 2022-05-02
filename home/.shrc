@@ -3,6 +3,7 @@ alias :q=exit
 
 # alias l='ls -lA'
 alias l='ls -lAh'
+alias l.='ls -d .*' # taken from /etc/profile.d/colorls.sh
 alias shrug="printf %s '¯\_(ツ)_/¯'"
 alias exists='command -v >/dev/null'
 
