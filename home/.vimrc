@@ -108,7 +108,7 @@ if has('persistent_undo')
     endif
 else
     echohl WarningMsg
-    echom 'Vim not compiled with +peristent_undo. Persistent undo disabled.'
+    echom 'Vim not compiled with +persistent_undo. Persistent undo disabled.'
     echohl None
 endif
 " }}}
