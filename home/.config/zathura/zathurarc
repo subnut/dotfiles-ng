@@ -15,6 +15,7 @@ set scrollbar-bg rgba(0,0,0,0)
 set guioptions vh
 
 # rice
+set notification-warning-bg "#eecc00"
 # set inputbar-bg "#eecc00"
 # set inputbar-fg "#000000"
 # set index-active-bg "#eecc00"
