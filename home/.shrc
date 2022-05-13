@@ -50,13 +50,19 @@ exists editorconfig && {
     }
 }
 exists rg && {
-    alias rg='rg --no-heading'
+    alias rg='rg --no-heading --smart-case'
     alias rgs='rg -s'   # case-sensitive
     alias rgi='rg -i'   # case-insensitive
 }
 exists firefox && {
     export MOZ_WEBRENDER=1
     export MOZ_ACCELERATED=1
+}
+exists traceroute && {
+    # Use ICMP ECHO (like Windows does) instead of UDP
+    if   exists doas; then alias traceroute='doas traceroute -I'
+    elif exists sudo; then alias traceroute='sudo traceroute -I'
+    else alias traceroute="su -c 'traceroute -I'"; fi
 }
 exists yt-dlp && {
     if exists ffmpeg; then

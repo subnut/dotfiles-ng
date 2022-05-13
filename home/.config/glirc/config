@@ -12,6 +12,9 @@ macros:
         commands: "away"
     *   name: "busy"
         commands: "away busy"
+    *   name: "clearznc"
+        arguments: "channel?"
+        commands: "znc clearbuffer ${channel|$channel}"
 
 key-bindings:
     *   bind: "F1"
