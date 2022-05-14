@@ -23,8 +23,9 @@ set $left h
 set $down j
 set $up k
 set $right l
-# Your preferred terminal emulator
+# Your preferred programs
 set $term exec footclient
+set $filemanager exec nautilus -w
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
@@ -124,6 +125,9 @@ bindsym XF86AudioMicMute     nop
 
     # Start your launcher
     # bindsym $mod+d exec $menu     # $mod+d
+
+    # Start file manager
+    bindsym $mod+e exec $filemanager
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.

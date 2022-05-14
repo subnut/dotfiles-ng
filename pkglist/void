@@ -28,6 +28,7 @@ font-fantasque-sans-ttf
 font-ibm-plex-otf
 font-iosevka
 foot
+fuzzel
 gdb
 ghostscript
 git
@@ -61,6 +62,7 @@ noto-fonts-cjk
 noto-fonts-emoji
 noto-fonts-ttf
 nvme-cli
+openbsd-netcat
 opendoas
 openvpn
 patch
@@ -74,7 +76,6 @@ powertop
 pulseaudio-utils
 python3-pipx
 qt5-wayland
-radeontop
 ranger
 refind
 ripgrep
@@ -83,6 +84,8 @@ sbcl
 seatd
 simple-scan
 slurp
+socklog
+socklog-void
 spotify-adblock
 strace
 sway

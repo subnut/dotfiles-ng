@@ -19,17 +19,16 @@ echo ":$PATH:" | grep -Fq ":$HOME/.local/bin:" ||
     alias ls='ls --color=auto'
 } 2>/dev/null 1>&2
 
+## Set default CLI flags for a command
+_defaults() { exists "$1" && alias "$1=$*"; }
+_defaults ncdu --color off
+_defaults curl --parallel --parallel-immediate
+_defaults fuzzel -Dno -fsans:size=16 -Ffilename,name,generic,exec,keywords,comment -bfdf6e3ff --no-fuzzy
+unset -f _defaults
 
-exists ncdu &&
-    alias ncdu='ncdu --color off'
-exists curl &&
-    alias curl='curl --parallel --parallel-immediate'
-exists zsh &&
-    alias zshrc='$EDITOR $HOME/.zshrc'
-exists sway &&
-    alias swayprop="$HOME/.config/sway/swayprop"
-exists ssh-agent &&
-    alias withssh='SSH_AUTH_SOCK=$_SSH_AUTH_SOCK SSH_AGENT_PID=$_SSH_AGENT_PID'
+exists zsh          && alias zshrc='$EDITOR $HOME/.zshrc'
+exists sway         && alias swayprop="$HOME/.config/sway/swayprop"
+exists ssh-agent    && alias withssh='SSH_AUTH_SOCK=$_SSH_AUTH_SOCK SSH_AGENT_PID=$_SSH_AGENT_PID'
 
 exists editorconfig && {
     exists bat && {
