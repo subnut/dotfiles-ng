@@ -20,6 +20,8 @@ echo ":$PATH:" | grep -Fq ":$HOME/.local/bin:" ||
 } 2>/dev/null 1>&2
 
 
+exists ncdu &&
+    alias ncdu='ncdu --color off'
 exists curl &&
     alias curl='curl --parallel --parallel-immediate'
 exists zsh &&
