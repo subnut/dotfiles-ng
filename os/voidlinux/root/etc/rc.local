@@ -1,0 +1,21 @@
+# Default rc.local for void; add your custom commands here.
+# This is run by runit in stage 2 before the services are executed
+# (see /etc/runit/2).
+
+# Turn off bluetooth
+# NOTE: `bluetooth` is provided by TLP (thinkpad battery mgmt package)
+command -v bluetooth >/dev/null 2>&1 && bluetooth off
+
+# https://gitlab.com/ddcci-driver-linux/ddcci-driver-linux
+# xbps-install ddcci-dkms
+modprobe -v ddcci-backlight
+
+# Written this way so that it doesn't get killed when this script exits
+# NOTE: This /dev/input/.. path is specific to E14 Gen3 only. Modify as needed.
+( /usr/local/bin/capsctrl /dev/input/by-path/platform-i8042-serio-0-event-kbd & )
+
+# Change to second terminal, so that the boot messages can remain visible in
+# the first terminal/screen
+chvt 2
+
+# vim: ft=sh

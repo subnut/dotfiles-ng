@@ -35,6 +35,9 @@ save() {
     else DESTDIR="root${DESTDIR}"
     fi
 
+    [ $# = 2 ] &&
+        DESTDIR="os/$2/${DESTDIR}"
+
     [ ! -d "$DESTDIR" ] &&
         mkdir -p "$DESTDIR"
 
@@ -117,8 +120,6 @@ _save() {
 
     run rm -rf root
     run save /etc/doas.conf
-    run save /etc/rc.local
-    run save /etc/acpi/handler.sh
     run save /etc/tlp.d/BAT0.conf
     run save /etc/sudoers.d/allow_wheel
     run save /etc/elogind/logind.conf.d/custom.conf
@@ -127,6 +128,14 @@ _save() {
     run save /etc/modules-load.d  # load modules automatically instead of having to `modprobe`
 
     run save_pkglist
+
+    ## OS/Distro-specific settings
+    # Void Linux
+    [ -f /lib/dracut/dracut.conf.d/00-void.conf ] && {
+        rm -rf os/voidlinux
+        run save /etc/rc.local              voidlinux
+        run save /etc/acpi/handler.sh       voidlinux
+    }
 }
 
 _load() {
