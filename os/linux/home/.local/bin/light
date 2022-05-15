@@ -20,15 +20,15 @@ print_values() {
 	MAXperLEN=0
 	for dev in *; do
 		read -r max < "$dev/max_brightness"
-		read -r cur < "$dev/brightness"
+		read -r cur < "$dev/actual_brightness"
 		per=$(( cur * 100 / max ))	# per-centage
 		[ $MAXdevLEN -lt ${#dev} ] && MAXdevLEN=${#dev}
 		[ $MAXcurLEN -lt ${#cur} ] && MAXcurLEN=${#cur}
 		[ $MAXperLEN -lt ${#per} ] && MAXperLEN=${#per}
 	done
 	for dev in *; do
-		read -r cur < "$dev/brightness"
 		read -r max < "$dev/max_brightness"
+		read -r cur < "$dev/actual_brightness"
 		## devname
 		printf "%-${MAXdevLEN}s" "$dev"
 		printf ' : '
@@ -46,8 +46,8 @@ print_values() {
 set_brightness() {
 	val=$1
 	dev=$2
-	read -r cur < "$dev/brightness"
 	read -r max < "$dev/max_brightness"
+	read -r cur < "$dev/actual_brightness"
 	cur_p=$(( cur * 100 / max ))	# percentage
 	case "${val%${val#?}}" in
 		(+) operand=+ ;;
