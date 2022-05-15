@@ -1,0 +1,104 @@
+#!/bin/sh
+die() {
+	test $# = 0 ||
+		echo "$*" >&2
+	exit 1
+}
+usage() {
+	t=$(printf '\t')
+	echo "usage: ${0##*/} [[+|-]<brightness> [<device>]]"
+	echo
+	echo "${t}<device>       is a subdirectory of /sys/class/backlight"
+	echo "${t}<brightness>   is an non-negative integer less than 100"
+	echo
+	echo 'Prefixing <brightness> with a + or - sign shall cause it'
+	echo 'to be increased or decreased by the specified percentage'
+}
+print_values() {
+	MAXdevLEN=0
+	MAXcurLEN=0
+	MAXperLEN=0
+	for dev in *; do
+		read -r max < "$dev/max_brightness"
+		read -r cur < "$dev/brightness"
+		per=$(( cur * 100 / max ))	# per-centage
+		[ $MAXdevLEN -lt ${#dev} ] && MAXdevLEN=${#dev}
+		[ $MAXcurLEN -lt ${#cur} ] && MAXcurLEN=${#cur}
+		[ $MAXperLEN -lt ${#per} ] && MAXperLEN=${#per}
+	done
+	for dev in *; do
+		read -r cur < "$dev/brightness"
+		read -r max < "$dev/max_brightness"
+		printf "%-${MAXdevLEN}s" "$dev"
+		printf ' : '
+		printf "%-${MAXperLEN}d" $(( cur * 100 / max ))
+		printf '%% '
+		printf "(%${MAXcurLEN}d)" $cur
+		printf '\n'
+	done
+}
+set_brightness() {
+	val=$1
+	dev=$2
+	read -r cur < "$dev/brightness"
+	read -r max < "$dev/max_brightness"
+	cur_p=$(( cur * 100 / max ))	# percentage
+	case "${val%${val#?}}" in
+		(+) operand=+ ;;
+		(-) operand=- ;;
+		(*) operand=  ;;
+	esac
+	val=${val#$operand}
+	test ${#operand} != 0 &&
+		val=$(( cur_p $operand val ))
+	test $val -lt 0   && val=0
+	test $val -gt 100 && val=100
+	echo $(( val * max / 100 )) > "$dev/brightness"
+}
+
+case "$*" in (*-h*)
+	usage
+	exit
+esac
+
+[ ! -d /sys/class/backlight ] &&
+	die directory not found: /sys/class/backlight
+
+cd /sys/class/backlight
+test $(ls -1 | wc -l) -gt 0 ||
+	die No backlight found
+
+if test $# -eq 0; then
+	print_values
+	exit
+fi
+if test $# -gt 2; then
+	echo Too many arguments >&2
+	usage >&2
+	die
+fi
+if echo "$1" | grep -qE '^[+-]?[[:digit:]]+$' \
+	&& [ "$1" -ge -100 ] && [ "$1" -le 100 ]
+then :
+else
+	echo Invalid brightness: "$1" >&2
+	usage >&2
+	die
+fi
+if test $# -eq 1
+then
+	for dev in *; do
+		if ! test -w "$dev/brightness"; then
+			echo "$dev/brightness not writable" >&2
+			continue
+		fi
+		set_brightness $1 $dev
+	done
+elif test $# -eq 2
+then
+	dev=$2
+	test -d "$dev"            || die "Incorrect device: $2"
+	test -w "$dev/brightness" || die "$dev/brightness not writable"
+	set_brightness $1 $dev
+fi
+# vim: set ts=4 sw=0 sts=0:

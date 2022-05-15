@@ -6,11 +6,15 @@
 
 # $1 should be + or - to step up or down the brightness.
 step_backlight() {
-    for backlight in /sys/class/backlight/*/; do
+    # for backlight in /sys/class/backlight/*/; do
+    for backlight in /sys/class/backlight/amdgpu_bl0/; do
         [ -d "$backlight" ] || continue
         step=$(( $(cat "$backlight/max_brightness") / 50 ))
         [ "$step" -gt "1" ] || step=1 #fallback if gradation is too low
-        printf '%s' "$(( $(cat "$backlight/brightness") $1 step ))" >"$backlight/brightness"
+        val=$(( $(cat "$backlight/brightness") $1 step ))
+        [ $val -lt 0   ] && val=0
+        [ $val -gt 100 ] && val=100
+        printf %s $val >"$backlight/brightness"
     done
 }
 

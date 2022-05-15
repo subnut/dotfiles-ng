@@ -28,6 +28,9 @@ trap 'rm -f stdout stderr' EXIT
 trap exit INT HUP TERM
 
 save() {
+    [ $# = 2 ] &&
+        set -- "$2" "$1"
+
     DESTDIR="$(dirname "$1")"
 
     if [ "${HOME}${DESTDIR#$HOME}" = "$DESTDIR" ]
@@ -130,11 +133,16 @@ _save() {
     run save_pkglist
 
     ## OS/Distro-specific settings
+    # Linux
+    [ $(uname) = Linux ] && {
+        rm -rf os/linux
+        run save linux ~/.local/bin/light
+    }
     # Void Linux
     [ -f /lib/dracut/dracut.conf.d/00-void.conf ] && {
         rm -rf os/voidlinux
-        run save /etc/rc.local              voidlinux
-        run save /etc/acpi/handler.sh       voidlinux
+        run save voidlinux /etc/rc.local
+        run save voidlinux /etc/acpi/handler.sh
     }
 }
 
