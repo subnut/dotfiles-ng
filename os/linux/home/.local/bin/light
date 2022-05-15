@@ -29,12 +29,18 @@ print_values() {
 	for dev in *; do
 		read -r cur < "$dev/brightness"
 		read -r max < "$dev/max_brightness"
+		## devname
 		printf "%-${MAXdevLEN}s" "$dev"
 		printf ' : '
-		printf "%-${MAXperLEN}d" $(( cur * 100 / max ))
-		printf '%% '
-		printf "(%${MAXcurLEN}d)" $cur
-		printf '\n'
+		## % brightness
+		printf "%${MAXperLEN}d%%" $(( cur * 100 / max ))
+		## raw brightness
+		# : style 1; printf "(%0${MAXcurLEN}d)\n" $cur
+		# : style 2; echo "($cur)"
+		if [ ! $cur = 0 ] && [ ! $max = 100 ]
+		then echo " ($cur)"
+		else echo
+		fi
 	done
 }
 set_brightness() {
@@ -85,8 +91,8 @@ else
 	usage >&2
 	die
 fi
-if test $# -eq 1
-then
+
+if test $# -eq 1; then
 	for dev in *; do
 		if ! test -w "$dev/brightness"; then
 			echo "$dev/brightness not writable" >&2
@@ -96,9 +102,10 @@ then
 	done
 elif test $# -eq 2
 then
-	dev=$2
-	test -d "$dev"            || die "Incorrect device: $2"
-	test -w "$dev/brightness" || die "$dev/brightness not writable"
-	set_brightness $1 $dev
+	for dev in $2; do	# $2 is unquoted to allow globbing
+		test -d "$dev"            || die "Incorrect device: $dev"
+		test -w "$dev/brightness" || die "$dev/brightness not writable"
+		set_brightness $1 $dev
+	done
 fi
 # vim: set ts=4 sw=0 sts=0:
