@@ -197,7 +197,8 @@ elif [ ! $IS_TTY ]; then
     run() { echo "$*"; "$@"; }
 else
     run() {
-        CMD="$(echo "$*" | sed "s;$HOME;\$HOME;g")"
+        # CMD="$(echo "$*" | sed "s;$HOME;\$HOME;g")"   # Show $HOME as "$HOME"
+        CMD="$(echo "$*" | sed "s;$HOME;~;g")"          # Show $HOME as "~"
         echo "[${FG_YELLOW}${BOLD}WAIT${RESET}] $CMD"
         "$@" 1>stdout 2>stderr
         if [ $? -eq 0 ]
