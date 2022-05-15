@@ -28,18 +28,18 @@ trap 'rm -f stdout stderr' EXIT
 trap exit INT HUP TERM
 
 save() {
-    [ $# = 2 ] &&
-        set -- "$2" "$1"
+    OS=common
+    [ $# = 2 ] && {
+        OS=os/"$1"
+        shift
+    }
 
     DESTDIR="$(dirname "$1")"
-
     if [ "${HOME}${DESTDIR#$HOME}" = "$DESTDIR" ]
     then DESTDIR="home${DESTDIR#$HOME}"
     else DESTDIR="root${DESTDIR}"
     fi
-
-    [ $# = 2 ] &&
-        DESTDIR="os/$2/${DESTDIR}"
+    DESTDIR="$OS/$DESTDIR"
 
     [ ! -d "$DESTDIR" ] &&
         mkdir -p "$DESTDIR"
