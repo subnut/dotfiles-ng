@@ -71,6 +71,15 @@ source $ZDOTDIR/.zsh/OMZ_snippets/clipboard.zsh
     # Enable completion for any function aliased to ssh
     (( ${+functions[${aliases[ssh]}]} )) && compdef "${aliases[ssh]}=ssh"
 }
+(( ${+commands[light]} )) && [[ ${commands[light]} == $HOME/.local/bin/light ]] && {
+    alias light='noglob light'
+    compdef _localbin_light light
+    _localbin_light() {
+        [[ ${#words} -eq 3 ]] || return
+        [[ -d /sys/class/backlight ]] || return
+        compadd ${$(echo /sys/class/backlight/*)##*/}
+    }
+}
 
 
 ## Custom commands
