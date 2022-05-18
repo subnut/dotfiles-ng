@@ -64,6 +64,7 @@ noto-fonts-ttf
 nvme-cli
 openbsd-netcat
 opendoas
+openresolv
 openvpn
 patch
 pavucontrol
@@ -82,8 +83,10 @@ ripgrep
 sane
 sbcl
 seatd
+shellcheck
 simple-scan
 slurp
+socat
 socklog
 socklog-void
 spotify-adblock
@@ -92,6 +95,7 @@ sway
 swayidle
 swaylock
 syncthing
+tailscale
 tcc
 tlp
 tmux

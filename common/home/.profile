@@ -31,7 +31,7 @@ fi
 exists ssh-agent && {
   export SSH_AUTH_SOCK="$_SSH_AUTH_SOCK"; unset _SSH_AUTH_SOCK
   export SSH_AGENT_PID="$_SSH_AGENT_PID"; unset _SSH_AGENT_PID
-  ssh-agent -k
+  eval `ssh-agent -sk`
 }
 
 exit
