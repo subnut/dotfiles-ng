@@ -131,17 +131,17 @@ _save() {
     # Linux
     [ $(uname) = Linux ] && {
         rm -rf os/linux
-        run save linux ~/.local/bin/light
-        run save linux  /etc/tlp.d/BAT0.conf
-        run save linux  /etc/elogind/logind.conf.d/custom.conf
-        run save linux  /etc/modules-load.d  # load modules automatically instead of having to `modprobe`
-        run save linux  /etc/udev/rules.d
+        run save  linux ~/.local/bin/light
+        run save  linux  /etc/tlp.d/BAT0.conf
+        run save  linux  /etc/elogind/logind.conf.d/custom.conf
+        run save  linux  /etc/modules-load.d  # load modules automatically instead of having to `modprobe`
+        run save  linux  /etc/udev/rules.d
     }
     # Void Linux
     [ -f /lib/dracut/dracut.conf.d/00-void.conf ] && {
         rm -rf os/voidlinux
-        run save voidlinux /etc/rc.local
-        run save voidlinux /etc/acpi/handler.sh
+        run save  voidlinux  /etc/rc.local
+        run save  voidlinux  /etc/acpi/handler.sh
     }
 }
 
