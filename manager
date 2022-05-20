@@ -97,7 +97,7 @@ save_pkglist() {
 }
 
 _save() {
-    run rm -rf home
+    run rm -rf common/home
     run save ~/.gitconfig
     run save ~/.profile
     run save ~/.shrc
@@ -121,7 +121,7 @@ _save() {
     run save_glirc_config
     run save ~/.vty
 
-    run rm -rf root
+    run rm -rf common/root
     run save /etc/doas.conf
     run save /etc/tlp.d/BAT0.conf
     run save /etc/sudoers.d/allow_wheel
