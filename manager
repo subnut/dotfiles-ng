@@ -123,12 +123,7 @@ _save() {
 
     run rm -rf common/root
     run save /etc/doas.conf
-    run save /etc/tlp.d/BAT0.conf
     run save /etc/sudoers.d/allow_wheel
-    run save /etc/elogind/logind.conf.d/custom.conf
-
-    run save /etc/udev/rules.d
-    run save /etc/modules-load.d  # load modules automatically instead of having to `modprobe`
 
     run save_pkglist
 
@@ -137,6 +132,10 @@ _save() {
     [ $(uname) = Linux ] && {
         rm -rf os/linux
         run save linux ~/.local/bin/light
+        run save linux  /etc/tlp.d/BAT0.conf
+        run save linux  /etc/elogind/logind.conf.d/custom.conf
+        run save linux  /etc/modules-load.d  # load modules automatically instead of having to `modprobe`
+        run save linux  /etc/udev/rules.d
     }
     # Void Linux
     [ -f /lib/dracut/dracut.conf.d/00-void.conf ] && {
