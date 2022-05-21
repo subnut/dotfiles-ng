@@ -8,6 +8,7 @@
   ],
   "modules-right": [
     "idle_inhibitor",
+    "network#wifi",
     "pulseaudio#mic",
     "pulseaudio",
     "battery",
@@ -57,7 +58,6 @@
     }
   },
   "pulseaudio#mic": {
-    "tooltip": false,
     "on-click": "pactl set-source-mute @DEFAULT_SOURCE@ toggle",
     "on-click-right": "pavucontrol -t 4",
     "scroll-step": 0.5,
@@ -78,13 +78,21 @@
     "format-bluetooth": "{icon} {volume}%",
     "format-icons": {
       "headphones": "",
-      "handsfree": "",
-      "headset": "",
+      "handsfree": "", // Needs fontawesome5
+      "headset": "", // Needs fontawesome5
       "phone": "",
       "portable": "",
       "car": "",
       "default": ["", ""]
     }
+  },
+  "network#wifi": {
+    "interface": "wl*",
+    "format":"",
+    "format-alt": "{ipaddr}",
+    "format-linked": " {essid} (No IP)",
+    "format-wifi": " {essid}",
+    "tooltip-format": "interface: {ifname}\nipaddr: {ipaddr}\ngateway: {gwaddr}\nsubnet mask: {cidr}\nstrength: {signalStrength}% ({signaldBm} dB)"
   }
 }
 // vim: nowrap et ts=2 sts=2 sw=2 ft=jsonc

@@ -24,6 +24,7 @@ window#waybar {
 
 /* Paddings */
 #idle_inhibitor,
+#network,
 #pulseaudio,
 #battery,
 #mode,
@@ -39,6 +40,15 @@ window#waybar {
 }
 #idle_inhibitor.activated {
   background: red;
+  color: black;
+}
+
+#network.wifi {
+  background: #609eff;
+  color: black;
+}
+#network.linked {
+  background: #f75;
   color: black;
 }
 
@@ -60,17 +70,17 @@ window#waybar {
 
 #battery {
   color: #000000;
-  background-color: #ffffff;
+  background: #ffffff;
 }
 #battery.charging {
-  background-color: #0ff;
+  background: #0ff;
 }
-#battery.full:not(.charging)     { background-color: #0f8; }
-#battery.good:not(.charging)     { background-color: #6f3; }
-#battery.okay:not(.charging)     { background-color: #ee8; }
-#battery.low:not(.charging)      { background-color: #f77; }
-#battery.warning:not(.charging)  { background-color: #f50; }
-#battery.critical:not(.charging) { background-color: #f00; }
+#battery.full:not(.charging)     { background: #0f8; }
+#battery.good:not(.charging)     { background: #6f3; }
+#battery.okay:not(.charging)     { background: #ee8; }
+#battery.low:not(.charging)      { background: #f77; }
+#battery.warning:not(.charging)  { background: #f50; }
+#battery.critical:not(.charging) { background: #f00; }
 #battery.low:not(.charging)      { font-size: 1.15em; }
 #battery.warning:not(.charging)  { font-size: 1.35em; }
 #battery.critical:not(.charging) { font-size: 1.65em; }
