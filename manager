@@ -1,6 +1,7 @@
 #!/bin/sh
 export CSI="$(printf '\033')["
 echo() { printf "%s\n" "$*"; }
+exists() { command -v "$1" >/dev/null 2>&1; }
 
 unset IS_TTY
 [ $FORCE_TTY ] || [ -t 1 ] && {
@@ -75,25 +76,31 @@ save_glirc_config() {
 }
 
 save_pkglist() {
+    cd pkglist
+
     # Void linux
-    command -v xbps-query >/dev/null 2>/dev/null && {
-        # rm -f pkglist/void
-        # for pkg in $(xbps-query -m)
-        # do echo "${pkg%-*}" >> pkglist/void
-        # done
-        unset script regex
-        rm -f pkglist/void pkglist/void_custom
-        script="$(xbps-query -L | cut -d ' ' -f 2 | while read repo; do
-            printf '%s' "\#: $repo#d;"
-        done)"; script="${script%;};s/-[^-]*: .*//"
-        xbps-query -p repository --regex -s . |
-            sed "$script" >> pkglist/void_custom
-        regex="$(cat pkglist/void_custom | while read pkg; do
-            printf '%s' "$pkg|"
-        done)"; regex="^(${regex%|})$"
-        xbps-query -m | sed 's/-[^-]*$//' | grep -vE "$regex" >> pkglist/void
-        unset script regex
+    exists xbps-query && {
+        set -- "$@" ^[^/]   void
+        set -- "$@" ^/      void_custom
+
+        unset regex
+        for pkg in $(xbps-query -m); do
+            regex="${regex}|${pkg%-*}"
+        done; unset pkg
+        regex="${regex#|}"
+        regex="^($regex)$"
+        while [ $# -gt 0 ]; do
+            rm -f $2
+            xbps-query --regex -p repository -s "$1"    \
+                | sed 's/: .*$//; s/-[^-]*$//'          \
+                | grep -E "$regex"                      \
+                > $2
+            shift 2
+        done
+        unset regex
     }
+
+    cd ..
 }
 
 _save() {
