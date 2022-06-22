@@ -425,7 +425,7 @@ Plug 'sainnhe/gruvbox-material'
     let g:gruvbox_material_better_performance = 1
     let g:gruvbox_material_sign_column_background = 'none'
     let g:gruvbox_material_background = 'hard'
-    let g:gruvbox_material_palette = 'mix'
+    let g:gruvbox_material_foreground = 'mix'
     aug gruvbox_material_overrides
         au!
         au ColorScheme gruvbox-material hi CurrentWord
