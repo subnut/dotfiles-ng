@@ -60,6 +60,21 @@ servers:
             -- *   "join #voidlinux"
             -- *   "join #temp"
 
+    *   name: "oftc"
+        hostname: "irc.oftc.net"
+        -- autoconnect: yes
+        tls: yes
+        sasl:
+            username: "..."
+            password: "..."
+        nick:
+            *   "subnut"
+            *   "snath03"
+        connect-cmds:
+            *   "join #oftc"
+            -- *   "join #moocows"
+            -- *   "join #chimera-linux"
+
 palette:
     meta: 0x07
     self: 0x09
