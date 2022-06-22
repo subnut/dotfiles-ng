@@ -359,8 +359,6 @@ Plug 'isobit/vim-caddyfile',    {'for': 'caddyfile'}
 " Improve editing experience
 Plug 'guns/vim-sexp'            " lisp
 Plug 'alvan/vim-closetag'       " html tags
-Plug 'itmammoth/doorboy.vim'    "`' () [] {}
-    let g:doorboy_additional_brackets = #{c:['<>']}
 Plug 'subnut/visualstar.vim'
     au delayed_plug_load BufEnter * ++once
                 \ call timer_start(0, {->plug#load('visualstar.vim')})
@@ -408,10 +406,6 @@ Plug 'ojroques/vim-oscyank'
         au TextYankPost * if v:event.regname ==# 'y' | OSCYankReg y | endif
     aug END
 
-"" Show diff between swapfile and file on disk
-"Plug 'chrisbra/recover.vim'
-"    let g:RecoverPlugin_Prompt_Verbose = 1
-
 " themes
 Plug 'cocopon/iceberg.vim'
 Plug 'NLKNguyen/papercolor-theme'
@@ -452,6 +446,26 @@ else
                 \)
     endif
 endif
+
+" Deprecated plugins {{{2
+" ------------------
+
+"" Auto-close brackets (and quotes)
+" Plug 'itmammoth/doorboy.vim'    "`' () [] {}
+"     let g:doorboy_additional_brackets = #{c:['<>']}
+
+"" Show diff between swapfile and file on disk
+" Plug 'chrisbra/recover.vim'
+"     let g:RecoverPlugin_Prompt_Verbose = 1
+
+"" NOTE: Do NOT enable the recover.vim plugin unless ABSOLUTELY necessary.
+""       It does some weird things.
+"" TODO: Extract out the compare-between-current-and-swapfile functionality
+""       into our own separate function, and delete this.
+"" TIP: Use v:progname (or v:argv) to invoke this special function. Possible
+""      names are - vimswapdiff
+
+"2}}}
 "}}}
 
 

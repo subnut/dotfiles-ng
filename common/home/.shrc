@@ -23,7 +23,6 @@ echo ":$PATH:" | grep -Fq ":$HOME/.local/bin:" ||
 _defaults() { exists "$1" && alias "$1=$*"; }
 _defaults ncdu --color off
 _defaults curl --parallel --parallel-immediate
-_defaults fuzzel -Dno -fsans:size=16 -Ffilename,name,generic,exec,keywords,comment -bfdf6e3ff --no-fuzzy
 unset -f _defaults
 
 exists zsh          && alias zshrc='$EDITOR $HOME/.zshrc'
@@ -33,8 +32,7 @@ exists ssh-agent    && alias withssh='SSH_AUTH_SOCK=$_SSH_AUTH_SOCK SSH_AGENT_PI
 exists editorconfig && {
     exists bat && {
         batview() {
-            {
-                _BAT_FLAGS=
+            {    _BAT_FLAGS=
                 for file in "$@"; do
                     if ! test -f "$file" ; then
                         _BAT_FLAGS="$_BAT_FLAGS $file"
@@ -54,6 +52,9 @@ exists rg && {
     alias rg='rg --no-heading --smart-case'
     alias rgs='rg -s'   # case-sensitive
     alias rgi='rg -i'   # case-insensitive
+    alias rgh='rg --heading'
+    alias rghs='rgh -s' # case-sensitive
+    alias rghi='rgh -i' # case-insensitive
 }
 exists firefox && {
     export MOZ_WEBRENDER=1

@@ -20,6 +20,8 @@ editorconfig
 efibootmgr
 elogind
 eog
+evince
+exfat-utils
 fd
 ffmpeg
 firefox
@@ -39,6 +41,7 @@ iwd
 jq
 lf
 libsixel-util
+links
 linux
 linux-headers
 lsof
@@ -75,6 +78,7 @@ pkgconf
 playerctl
 powertop
 pulseaudio-utils
+pv
 python3-pipx
 qt5-wayland
 ranger
@@ -99,12 +103,14 @@ tailscale
 tcc
 tlp
 tmux
+transmission
 unzip
 valgrind
 vim
 vsv
 wdisplays
 weechat
+wget
 wireplumber
 wl-clipboard
 wlsunset
@@ -119,5 +125,6 @@ zathura-pdf-mupdf
 zfs
 zfsbootmenu
 zig
+zip
 zsh
 zstd
