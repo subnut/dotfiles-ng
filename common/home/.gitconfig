@@ -3,3 +3,9 @@
 	email = sn03.general@gmail.com
 [init]
 	defaultBranch = main
+[push]
+	followTags = true
+[blame]
+	coloring = repeatedLines
+[color "blame"]
+	repeatedLines = 12

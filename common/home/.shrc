@@ -24,12 +24,22 @@ _defaults() { exists "$1" && alias "$1=$*"; }
 _defaults ncdu --color off
 unset -f _defaults
 
+## `less` defaults
+LESS='-i -r -#.3'
+export LESS
+exists less && {
+    alias less4='less -x4'
+    alias less8='less -x8'
+}
+
 exists zsh          && alias zshrc='$EDITOR $HOME/.zshrc'
 exists sway         && alias swayprop="$HOME/.config/sway/swayprop"
 exists ssh-agent    && alias withssh='SSH_AUTH_SOCK=$_SSH_AUTH_SOCK SSH_AGENT_PID=$_SSH_AGENT_PID'
 
-exists editorconfig && {
-    exists bat && {
+exists bat && {
+    alias bat4='bat --tabs=4'
+    alias bat8='bat --tabs=8'
+    exists editorconfig && {
         batview() {
             {   _BAT_FLAGS=
                 for file in "$@"; do
@@ -111,6 +121,8 @@ exists fzf && {
 }
 exists git && {
     alias g=git
+    # alias gbl='git blame -s'
+    gbl() { git blame -s "$@" | sed 's/ / │ /;s/)/│/' | less; }
     alias gst='git status'
     alias gsw='git switch'
     alias ga='git add'
