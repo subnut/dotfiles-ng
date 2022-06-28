@@ -31,7 +31,7 @@ exists ssh-agent    && alias withssh='SSH_AUTH_SOCK=$_SSH_AUTH_SOCK SSH_AGENT_PI
 exists editorconfig && {
     exists bat && {
         batview() {
-            {    _BAT_FLAGS=
+            {   _BAT_FLAGS=
                 for file in "$@"; do
                     if ! test -f "$file" ; then
                         _BAT_FLAGS="$_BAT_FLAGS $file"
