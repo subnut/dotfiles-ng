@@ -108,11 +108,12 @@ _save() {
     run save ~/.gitconfig
     run save ~/.profile
     run save ~/.shrc
-    run save ~/.vimrc
     run save ~/.tmux.conf
+    run save ~/.vimrc
     run save ~/.zsh
     run save ~/.zshrc
     run save ~/.ssh/config
+
     run save ~/.config/alacritty
     run save ~/.config/bat
     run save ~/.config/fontconfig
