@@ -105,6 +105,7 @@ save_pkglist() {
 
 _save() {
     run rm -rf common/home
+    run save ~/.curlrc
     run save ~/.gitconfig
     run save ~/.profile
     run save ~/.shrc

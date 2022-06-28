@@ -22,7 +22,6 @@ echo ":$PATH:" | grep -Fq ":$HOME/.local/bin:" ||
 ## Set default CLI flags for a command
 _defaults() { exists "$1" && alias "$1=$*"; }
 _defaults ncdu --color off
-_defaults curl --parallel --parallel-immediate
 unset -f _defaults
 
 exists zsh          && alias zshrc='$EDITOR $HOME/.zshrc'
