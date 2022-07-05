@@ -9,3 +9,13 @@
 	coloring = repeatedLines
 [color "blame"]
 	repeatedLines = 12
+[fetch]
+	parallel = 0	; uses reasonable default if set to 0
+	prune = true
+	pruneTags = true
+[help]
+	autocorrect = prompt
+[alias]
+	h = help
+[log]
+	follow = true

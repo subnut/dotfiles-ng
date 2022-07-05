@@ -37,6 +37,7 @@ exists sway         && alias swayprop="$HOME/.config/sway/swayprop"
 exists ssh-agent    && alias withssh='SSH_AUTH_SOCK=$_SSH_AUTH_SOCK SSH_AGENT_PID=$_SSH_AGENT_PID'
 
 exists bat && {
+    export BAT_THEME=GitHub
     alias bat4='bat --tabs=4'
     alias bat8='bat --tabs=8'
     exists editorconfig && {
@@ -58,7 +59,7 @@ exists bat && {
     }
 }
 exists rg && {
-    alias rg='rg --no-heading --smart-case'
+    alias rg='rg -. --no-heading --smart-case'
     alias rgs='rg -s'   # case-sensitive
     alias rgi='rg -i'   # case-insensitive
     alias rgh='rg --heading'
