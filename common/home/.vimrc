@@ -359,6 +359,7 @@ Plug 'isobit/vim-caddyfile',    {'for': 'caddyfile'}
 " Improve editing experience
 Plug 'guns/vim-sexp'            " lisp
 Plug 'alvan/vim-closetag'       " html tags
+Plug 'tpope/vim-surround'
 Plug 'subnut/visualstar.vim'
     au delayed_plug_load BufEnter * ++once
                 \ call timer_start(0, {->plug#load('visualstar.vim')})
