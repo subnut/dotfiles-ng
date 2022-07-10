@@ -80,8 +80,8 @@ save_pkglist() {
 
     # Void linux
     exists xbps-query && {
-        set -- "$@" ^[^/]   void
-        set -- "$@" ^/      void_custom
+        set -- "$@"  ^[^/]  void
+        set -- "$@"  ^/     void_custom
 
         unset regex
         for pkg in $(xbps-query -m); do
