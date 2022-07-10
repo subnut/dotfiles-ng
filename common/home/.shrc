@@ -25,7 +25,7 @@ _defaults ncdu --color off
 unset -f _defaults
 
 ## `less` defaults
-LESS='-i -r -#.3'
+LESS='-i -R -#.3'
 export LESS
 exists less && {
     alias less4='less -x4'
