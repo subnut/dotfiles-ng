@@ -1,7 +1,8 @@
 export EDITOR=vi
-alias :q=exit
+export GOPATH=$HOME/.gocache
+export GO111MODULE=auto
 
-# alias l='ls -lA'
+alias :q=exit
 alias l='ls -lAh'
 alias l.='ls -d .*' # taken from /etc/profile.d/colorls.sh
 alias shrug="printf %s '¯\_(ツ)_/¯'"
@@ -124,8 +125,9 @@ exists git && {
     alias g=git
     # alias gbl='git blame -s'
     gbl() { git blame -s "$@" | sed 's/ / │ /;s/)/│/' | less; }
-    alias gst='git status'
     alias gsw='git switch'
+    alias gst='git status'
+    alias gsts='git status -bs'
     alias ga='git add'
     alias gai='git add -i'
     alias gaa='git add --all'
