@@ -31,6 +31,7 @@ export LESS
 exists less && {
     alias less4='less -x4'
     alias less8='less -x8'
+    alias lesskeep='LESS="$LESS -X"'
 }
 
 exists zsh          && alias zshrc='$EDITOR $HOME/.zshrc'
@@ -145,9 +146,6 @@ exists git && {
         echo >&2 Use --force-with-lease instead
         return 1
     }
-    alias gl='git log --oneline --graph'
-    alias glog='git log --stat'
-    alias glog1='git log --stat -1'
     alias gd='git diff --patience'
     alias gds='gd --staged'
     alias gdh='gd HEAD'
@@ -156,6 +154,24 @@ exists git && {
         git init
         git commit --allow-empty -m 'git init'
     }
+    alias gl='git log --oneline --graph'
+    alias glog='git log --stat'
+    alias glogp='git log --stat --patch'
+    ## man 7 gitrevisions
+    #
+    # To list the last 5 commits -
+    #       git log @~5..
+    #
+    # To list the commits since we branched from 'main'
+    #       git log main..
+    #
+    # To list the commits in 'dev' since it branched from us
+    #       git log ..dev
+    #
+    # To list the commits in 'dev' and 'main' since they branched
+    #       git log main...dev --left-right
+    #
+    ##
 }
 exists python3 && {
     alias py=python3
