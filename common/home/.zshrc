@@ -65,6 +65,9 @@ source $ZDOTDIR/.zsh/OMZ_snippets/clipboard.zsh
     <>$TTY stty erase ${terminfo[kbs]}  # vim :term has ^H in $terminfo[kbs] but sets ^? in stty erase
 }
 
+## ZSH-specific
+(( ${+commands[curl]} )) && alias curl='noglob curl'
+
 
 ## Custom completions
 (( ${+functions[compdef]} )) && {

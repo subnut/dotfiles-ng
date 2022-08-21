@@ -17,5 +17,6 @@
 	autocorrect = prompt
 [alias]
 	h = help
+	dev = checkout -B dev
 [log]
 	follow = true
