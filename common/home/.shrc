@@ -40,6 +40,7 @@ exists ssh-agent    && alias withssh='SSH_AUTH_SOCK=$_SSH_AUTH_SOCK SSH_AGENT_PI
 
 exists bat && {
     export BAT_THEME=GitHub
+    alias batp='bat --style=header-filename'
     alias bat4='bat --tabs=4'
     alias bat8='bat --tabs=8'
     exists editorconfig && {
@@ -50,10 +51,9 @@ exists bat && {
                         _BAT_FLAGS="$_BAT_FLAGS $file"
                         continue
                     fi
-                    if editorconfig "$(pwd)/$file" | grep -Fq tab_width; then
-                        bat -f --tabs "$(editorconfig "$(pwd)/$file" | grep -F tab_width | cut -d = -f 2)" "$file"
-                    else
-                        bat -f "$file"
+                    if editorconfig "$(pwd)/$file" | grep -Fq tab_width
+                    then bat $_BAT_FLAGS -f --tabs "$(editorconfig "$(pwd)/$file" | grep -F tab_width | cut -d = -f 2)" "$file"
+                    else bat $_BAT_FLAGS -f "$file"
                     fi
                 done
             } | less -RFS
@@ -61,6 +61,7 @@ exists bat && {
     }
 }
 exists rg && {
+    alias rgl='rg -l'
     alias rg='rg -. --no-heading --smart-case'
     alias rgs='rg -s'   # case-sensitive
     alias rgi='rg -i'   # case-insensitive
