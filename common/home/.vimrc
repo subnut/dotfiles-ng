@@ -252,6 +252,7 @@ nmap <Plug>(My-Comment-Toggler)
 vmap <Plug>(My-Comment-Toggler) <ESC>'<<Plug>(My-Comment-Toggler)'>
 
 fun! MyCommentorOpFunc(...) "{{{
+    if empty(&l:cms) | return | endif " if commentstring is empty, abort
     if getline(line("'[")) =~ ('\v^\s{-}\V' .  printf(&l:cms,'\.\*'))
         execute "normal '[V']\<Plug>(My-Un-Commenter)"
     else
