@@ -10,7 +10,7 @@ step_backlight() {
     for backlight in /sys/class/backlight/amdgpu_bl0/; do
         [ -d "$backlight" ] || continue
         max=$(cat "$backlight/max_brightness")
-        step=$(( max / 50 ))
+        step=$(( max / 40 ))
         [ "$step" -gt "1" ] || step=1 #fallback if gradation is too low
         val=$(( $(cat "$backlight/brightness") $1 step ))
         [ $val -lt 0   ] && val=0

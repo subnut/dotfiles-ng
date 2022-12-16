@@ -36,6 +36,7 @@
     // "full-at": 80,   // Might scare ya
     // "format-not": " {capacity}%",       // (upto 0.9.9)  "Not charging" -> "not"
     "format-not-charging": " {capacity}%", // (from 0.9.10) "Not charging" -> "not-charging"
+    "format-plugged": " {capacity}%", // (from 0.9.16) "Plugged" -> "plugged"
     // "format-charging": "{capacity}% <small>({time})</small> ",  // needs fontawesome5
     "format-charging": " {capacity}% <small>({time})</small>",
     "format-discharging": "{capacity}% <small>({time})</small>",
