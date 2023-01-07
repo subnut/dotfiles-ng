@@ -127,6 +127,8 @@ _save() {
     run save ~/.config/waybar
     run save ~/.config/zathura
 
+    run save ~/.config/nvim/init.vim
+
     run save_glirc_config
     run save ~/.vty
 

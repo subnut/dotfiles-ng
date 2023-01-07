@@ -1,6 +1,6 @@
 scriptencoding utf-8
-unlet! skip_defaults_vim
 if !has('nvim')
+    unlet! skip_defaults_vim
     source $VIMRUNTIME/defaults.vim
 endif
 
