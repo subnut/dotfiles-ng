@@ -1,6 +1,6 @@
 scriptencoding utf-8
 unlet! skip_defaults_vim
-if !has("nvim")
+if !has('nvim')
     source $VIMRUNTIME/defaults.vim
 endif
 
@@ -72,12 +72,12 @@ com! -range -bang Notab let b:Notab_et = &l:et | let &l:et = 1 | exe
             \."<bang>" | let &l:et = b:Notab_et | unlet b:Notab_et
 " }}}
 " Swap files {{{
-let s:swapdir = !has("nvim") ? '~/.vimswap' : '~/.config/nvim/swap'
+let s:swapdir = expand(!has('nvim') ? '~/.vimswap' : '~/.config/nvim/swap')
 if !isdirectory(fnamemodify(s:swapdir, ':p'))
     if exists('*mkdir')
         call mkdir(fnamemodify(s:swapdir, ':p'), 'p', 0o0700)
         if !isdirectory(fnamemodify(s:swapdir, ':p'))
-            let &directory = s:swapdir . "//"
+            let &directory = s:swapdir . '//'
         endif
     else
         echohl WarningMsg
@@ -85,14 +85,14 @@ if !isdirectory(fnamemodify(s:swapdir, ':p'))
         echohl None
     endif
 else
-    let &directory = s:swapdir . "//"
+    let &directory = s:swapdir . '//'
     if getfperm(fnamemodify(s:swapdir, ':p')) !=# 'rwx------'
         call setfperm(fnamemodify(s:swapdir, ':p'), 'rwx------')
     endif
 endif
 " }}}
 " Persistent undo {{{
-let s:undodir = !has("nvim") ? '~/.vimundo' : '~/.config/nvim/undo'
+let s:undodir = expand(!has('nvim') ? '~/.vimundo' : '~/.config/nvim/undo')
 if has('persistent_undo')
     if !isdirectory(fnamemodify(s:undodir, ':p'))
         if exists('*mkdir')
@@ -338,7 +338,7 @@ if $TERM == 'foot'
 endif
 "}}}
 
-let s:autoloaddir = (!has("nvim") ? '~/.vim' : '~/.config/nvim') .. '/autoload'
+let s:autoloaddir = expand((!has('nvim') ? '~/.vim' : '~/.config/nvim') . '/autoload')
 if !empty(glob(s:autoloaddir . '/plug.vim'))
 " Plugins {{{
 " -------
