@@ -1,6 +1,8 @@
 scriptencoding utf-8
 unlet! skip_defaults_vim
-source $VIMRUNTIME/defaults.vim
+if !has("nvim")
+    source $VIMRUNTIME/defaults.vim
+endif
 
 
 set title
@@ -70,41 +72,43 @@ com! -range -bang Notab let b:Notab_et = &l:et | let &l:et = 1 | exe
             \."<bang>" | let &l:et = b:Notab_et | unlet b:Notab_et
 " }}}
 " Swap files {{{
-if !isdirectory(fnamemodify('~/.vimswap', ':p'))
+let s:swapdir = !has("nvim") ? '~/.vimswap' : '~/.config/nvim/swap'
+if !isdirectory(fnamemodify(s:swapdir, ':p'))
     if exists('*mkdir')
-        call mkdir(fnamemodify('~/.vimswap', ':p'), 'p', 0o0700)
-        if !isdirectory(fnamemodify('~/.vimswap', ':p'))
-            set directory=~/.vimswap//
+        call mkdir(fnamemodify(s:swapdir, ':p'), 'p', 0o0700)
+        if !isdirectory(fnamemodify(s:swapdir, ':p'))
+            let &directory = s:swapdir . "//"
         endif
     else
         echohl WarningMsg
-        echom 'Please create ~/.vimswap directory with with permissions 0700'
+        echom 'Please create ' . s:swapdir . ' directory with with permissions 0700'
         echohl None
     endif
 else
-    set directory=~/.vimswap//
-    if getfperm(fnamemodify('~/.vimswap', ':p')) !=# 'rwx------'
-        call setfperm(fnamemodify('~/.vimswap', ':p'), 'rwx------')
+    let &directory = s:swapdir . "//"
+    if getfperm(fnamemodify(s:swapdir, ':p')) !=# 'rwx------'
+        call setfperm(fnamemodify(s:swapdir, ':p'), 'rwx------')
     endif
 endif
 " }}}
 " Persistent undo {{{
+let s:undodir = !has("nvim") ? '~/.vimundo' : '~/.config/nvim/undo'
 if has('persistent_undo')
-    if !isdirectory(fnamemodify('~/.vimundo', ':p'))
+    if !isdirectory(fnamemodify(s:undodir, ':p'))
         if exists('*mkdir')
             " NOTE: The execute bit is nessecary, because otherwise we cannot
             " cd into that directory, nor can we create new files in th directory
-            call mkdir(fnamemodify('~/.vimundo', ':p'), 'p', 0o0700)
+            call mkdir(fnamemodify(s:undodir, ':p'), 'p', 0o0700)
         else
             echohl WarningMsg
-            echom 'Directory ~/.vimundo not available. Persistent undo disabled.'
+            echom 'Directory ' . s:undodir . ' not available. Persistent undo disabled.'
             echohl None
         endif
     endif
     set undofile
-    set undodir=~/.vimundo
-    if getfperm(fnamemodify('~/.vimundo', ':p')) !=# 'rwx------'
-        call setfperm(fnamemodify('~/.vimundo', ':p'), 'rwx------')
+    let &undodir = s:undodir
+    if getfperm(fnamemodify(s:undodir, ':p')) !=# 'rwx------'
+        call setfperm(fnamemodify(s:undodir, ':p'), 'rwx------')
     endif
 else
     echohl WarningMsg
@@ -334,7 +338,8 @@ if $TERM == 'foot'
 endif
 "}}}
 
-if !empty(glob('~/.vim/autoload/plug.vim'))
+let s:autoloaddir = (!has("nvim") ? '~/.vim' : '~/.config/nvim') .. '/autoload'
+if !empty(glob(s:autoloaddir . '/plug.vim'))
 " Plugins {{{
 " -------
 aug delayed_plug_load
@@ -442,10 +447,12 @@ else
         echom 'run :PlugInstall to install vim-plug'
         execute("command! PlugInstall execute '!curl -L --create-dirs
                 \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-                \ -o ~/.vim/autoload/plug.vim'
+                \ -o " . s:autoloaddir . "/plug.vim'
                 \| source " . expand('<sfile>')
                 \. '|PlugInstall'
                 \)
+    else
+        echom 'curl not found. :PlugInstall disabled.'
     endif
 endif
 
