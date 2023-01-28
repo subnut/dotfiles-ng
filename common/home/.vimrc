@@ -350,10 +350,6 @@ set t_ut=
 " neovim-specific config {{{
 if has('nvim')
     unmap Y
-    if $TERM == 'foot'
-        set termguicolors
-        colo gruvbox-material
-    endif
     if !empty(exepath('python3')) || (!empty(exepath('python')) &&
                 \system('python -c "import sys; print(sys.version_info.major)"') ==# '3')
         let s:python3exe = !empty(exepath('python3')) ? exepath('python3') : exepath('python')
@@ -366,14 +362,14 @@ if has('nvim')
             autocmd TermClose <buffer> ++once if v:event.status == 0
                         \| exe "bdelete" . expand("<abuf>") | endif
         endif
-        let g:python3_host_prog = glob(s:python3venv . '/bin/python')
+        let g:python3_host_prog = expand(s:python3venv . '/bin/python')
         let $PATH = fnamemodify(g:python3_host_prog, ':p:h') . ':' . $PATH
     endif
 endif
 "}}}
 
 let s:autoloaddir = expand((!has('nvim') ? '~/.vim' : '~/.config/nvim') . '/autoload')
-if !empty(s:autoloaddir . '/plug.vim')
+if !empty(glob(s:autoloaddir . '/plug.vim'))
 " Plugins {{{
 " -------
 aug delayed_plug_load
@@ -531,6 +527,13 @@ endif
 ""      names are - vimswapdiff
 
 "2}}}
+"}}}
+if has('nvim') "{{{
+    if $TERM == 'foot'
+        set termguicolors
+        colo gruvbox-material
+    endif
+endif
 "}}}
 
 " vim:et:ts=4:sts=4:sw=0:fdm=marker
