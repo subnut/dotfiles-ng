@@ -3,8 +3,8 @@ export GOPATH=$HOME/.gocache
 export GO111MODULE=auto
 
 alias :q=exit
-alias l='ls -lAh'
-alias l.='ls -d .*' # taken from /etc/profile.d/colorls.sh
+alias l='ls -lAF -h'
+alias l.='ls -dAF .*' # taken from /etc/profile.d/colorls.sh
 alias shrug="printf %s '¯\_(ツ)_/¯'"
 alias exists='command -v >/dev/null'
 
@@ -16,9 +16,10 @@ echo ":$PATH:" | grep -Fq ":$HOME/.local/bin:" ||
 
 ## Check --color support in `ls`
 # NOTE: Should come *after* we've added ~/.local/bin to PATH
-{ ls --color=auto && test "$(ls --color=auto)" != "$(ls -- --color=auto)" &&
-    alias ls='ls --color=auto'
-} 2>/dev/null 1>&2
+if ls --color=auto && [ "$(ls --color=auto)" != "$(ls -- --color=auto)" ]
+then alias ls='ls -F --color=auto'
+else alias ls='ls -F'
+fi 2>/dev/null 1>&2
 
 ## Set default CLI flags for a command
 _defaults() { exists "$1" && alias "$1=$*"; }

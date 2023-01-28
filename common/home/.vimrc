@@ -154,6 +154,7 @@ let g:TrailingWhitespaceExcludedFileTypes = [
             \ 'markdown',
             \ 'fugitive',
             \ 'gitcommit',
+            \ 'vim-plug',
             \]
 au TrailingWhitespace FileType *
             \ if (index(g:TrailingWhitespaceExcludedFileTypes, &l:filetype) != -1) |
@@ -166,13 +167,13 @@ command! ColorColumnToggleGlobal call ColorColumnToggle(0)
 fun! ColorColumnToggle(local) "{{{
     if a:local
         if &l:colorcolumn == ''
-            let &l:colorcolumn = '+'.join(range(1,100),',+')
+            let &l:colorcolumn = '+'.join(range(1,200),',+')
         else
             let &l:colorcolumn = ''
         endif
     else
         if &colorcolumn == ''
-            let &colorcolumn = '+'.join(range(1,100),',+')
+            let &colorcolumn = '+'.join(range(1,200),',+')
         else
             let &colorcolumn = ''
         endif
@@ -181,7 +182,7 @@ endfun "}}}
 aug MyCustomColorColumn
     au!
     au BufEnter * if &ft =~ 'gitcommit\|vim'
-                \| let &l:colorcolumn = '+'.join(range(1,100),',+')
+                \| let &l:colorcolumn = '+'.join(range(1,200),',+')
                 \| endif
 aug END
 " }}}
@@ -336,10 +337,43 @@ if $TERM == 'foot'
     let &t_TI = "\<Esc>[>4;2m"
     let &t_TE = "\<Esc>[>4;m"
 endif
+
+" See: https://github.com/kovidgoyal/kitty/issues/108#issuecomment-320492663
+"
+" Vim hardcodes background color erase even if the terminfo file does not
+" contain bce (not to mention that libvte based terminals incorrectly contain
+" bce in their terminfo files). This causes incorrect background rendering
+" when using a colorscheme with a non-transparent background.
+set t_ut=
+"}}}
+
+" neovim-specific config {{{
+if has('nvim')
+    unmap Y
+    if $TERM == 'foot'
+        set termguicolors
+        colo gruvbox-material
+    endif
+    if !empty(exepath('python3')) || (!empty(exepath('python')) &&
+                \system('python -c "import sys; print(sys.version_info.major)"') ==# '3')
+        let s:python3exe = !empty(exepath('python3')) ? exepath('python3') : exepath('python')
+        let s:python3venv = '~/.config/nvim/venv'
+        if empty(glob(s:python3venv))
+            5new | exe 'terminal echo Creating virtualenv... ;'
+                        \. s:python3exe . ' -m venv ' . s:python3venv . ';'
+                        \. s:python3venv . '/bin/python -m pip install wheel;'
+                        \. s:python3venv . '/bin/python -m pip install pynvim;'
+            autocmd TermClose <buffer> ++once if v:event.status == 0
+                        \| exe "bdelete" . expand("<abuf>") | endif
+        endif
+        let g:python3_host_prog = glob(s:python3venv . '/bin/python')
+        let $PATH = fnamemodify(g:python3_host_prog, ':p:h') . ':' . $PATH
+    endif
+endif
 "}}}
 
 let s:autoloaddir = expand((!has('nvim') ? '~/.vim' : '~/.config/nvim') . '/autoload')
-if !empty(glob(s:autoloaddir . '/plug.vim'))
+if !empty(s:autoloaddir . '/plug.vim')
 " Plugins {{{
 " -------
 aug delayed_plug_load
@@ -357,7 +391,7 @@ Plug 'editorconfig/editorconfig-vim'
                                     \? 'external_command'
                                     \: 'vim_core'
 
-" language support
+" Language support
 Plug 'zah/nim.vim',             {'for': 'nim'}
 Plug 'ziglang/zig.vim',         {'for': 'zig'}
 Plug 'isobit/vim-caddyfile',    {'for': 'caddyfile'}
@@ -389,13 +423,21 @@ Plug 'airblade/vim-gitgutter', {'on': []}   " Git diff
     hi GitGutterChange  ctermfg=3
     hi GitGutterDelete  ctermfg=1
 
+" snippets
+if has('nvim') || has ('python3')
+    Plug 'SirVer/ultisnips'
+    let g:UltiSnipsExpandTrigger="<tab>"
+    let g:UltiSnipsJumpForwardTrigger="<c-b>"
+    let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+endif
+
 " undotree
 Plug 'mbbill/undotree', {'on': 'UndotreeToggle'}
     let g:undotree_WindowLayout = 2
     let g:undotree_SetFocusWhenToggle = 1
     nnoremap <leader>u <cmd>UndotreeToggle<cr>
 
-" python auto-formatter
+" Python auto-formatter
 Plug 'psf/black', { 'branch': 'stable', 'on': [] }
     au delayed_plug_load BufEnter * ++once
                 \ call timer_start(100, {->plug#load('black')})
@@ -407,13 +449,27 @@ Plug 'psf/black', { 'branch': 'stable', 'on': [] }
 " Copy to clipboard using OSC 52 - mapped to <leader>Y
 Plug 'ojroques/vim-oscyank'
     let g:oscyank_silent = 1
-    noremap  <leader>Y "y
+    noremap <leader>Y "y
     aug oscyank
         au!
         au TextYankPost * if v:event.regname ==# 'y' | OSCYankReg y | endif
     aug END
 
-" themes
+" Neovim-specific
+if has('nvim')
+    Plug 'neovim/nvim-lspconfig'
+    Plug 'ms-jpq/coq_nvim'
+    let g:coq_settings = {
+                \ 'auto_start': 'shut-up',
+                \ 'display.icons.mode': 'none',
+                \ 'keymap.recommended': v:true,
+                \ 'completion.always': v:true,
+                \ 'display.pum.fast_close': v:false,
+                \ 'limits.completion_auto_timeout': 1,
+                \}
+endif
+
+" Themes
 Plug 'cocopon/iceberg.vim'
 Plug 'NLKNguyen/papercolor-theme'
     let g:PaperColor_Theme_Options = #{
@@ -424,8 +480,8 @@ Plug 'NLKNguyen/papercolor-theme'
                 \       }
                 \   },
                 \   language: #{
-                \       c: #{highlight_builtins:1},
-                \       python: #{highlight_builtins:1},
+                \       c: #{highlight_builtins: 1},
+                \       python: #{highlight_builtins: 1},
                 \   }
                 \}
 Plug 'sainnhe/gruvbox-material'
@@ -476,21 +532,5 @@ endif
 
 "2}}}
 "}}}
-
-
-if $TERM =~ 'st-256color'
-    set termguicolors
-    colorscheme gruvbox-material
-endif
-
-
-" See: https://github.com/kovidgoyal/kitty/issues/108#issuecomment-320492663
-"
-" Vim hardcodes background color erase even if the terminfo file does not
-" contain bce (not to mention that libvte based terminals incorrectly contain
-" bce in their terminfo files). This causes incorrect background rendering
-" when using a colorscheme with a non-transparent background.
-set t_ut=
-
 
 " vim:et:ts=4:sts=4:sw=0:fdm=marker

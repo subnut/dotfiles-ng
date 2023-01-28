@@ -77,6 +77,7 @@ servers:
 
 palette:
     meta: 0x07
+    time: 0x07
     self: 0x09
     self-highlight:
         fg: 0x09
