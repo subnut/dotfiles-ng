@@ -21,10 +21,15 @@ set fileformats=unix,dos
 
 setg nowrap
 setg encoding=utf-8
+setg spelllang+=en_gb
 setg matchpairs+=<:>
-setg listchars=trail:-,nbsp:+
+setg listchars=nbsp:+
 
-setg listchars+=eol:~
+setg listchars=trail:@
+" setg listchars=trail:-
+
+setg listchars+=eol:\\u21b2
+" setg listchars+=eol:~
 " setg listchars+=eol:-
 " setg listchars+=eol:$
 
@@ -66,12 +71,62 @@ com! -nargs=+ -complete=shellcmd Man delcom Man | runtime ftplugin/man.vim
             \ | exe expand(<q-mods>) . ' Man ' . expand(<q-args>)
 
 
-" :Notab -- :retab, but with 'expandtab' set {{{
+" Auto-correct last incorrect word {{{1
+" https://castel.dev/post/lecture-notes-1/#correcting-spelling-mistakes-on-the-fly
+inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
+
+" Delete surrounding (ds) {{{1
+nnoremap <silent><expr> ds 'di' . nr2char(getchar()) . 'vhp'
+
+" Ranger integration {{{1
+if exists('$RANGER_LEVEL')
+    nmap q <cmd>q<CR>
+endif
+
+" GetHiGroup - Get higlight group of the character under cursor {{{1
+fun! GetHiGroup()
+    return synIDattr(synID(line('.'), col('.'), 1), 'name')
+endfun
+command! GetHiGroup echo GetHiGroup()
+
+" :Notab -- :retab, but with 'expandtab' set {{{1
 com! -range -bang Notab let b:Notab_et = &l:et | let &l:et = 1 | exe
             \ (<range>?(<range>-1)?"<line1>,<line2>":"<line1>":"")."retab"
             \."<bang>" | let &l:et = b:Notab_et | unlet b:Notab_et
-" }}}
-" Swap files {{{
+
+" Copy to clipboard {{{1
+if !(has('xterm_clipboard') && has('unnamedplus')) " use <leader>y
+    noremap <leader>y <cmd>call SyncClipboard()<CR>"z
+    aug YankToClipboard
+        au!
+        au TextYankPost * if v:event.regname ==# 'z' | call CopyToClipboard(
+                    \join(v:event.regcontents, "\n"))| endif
+    aug END
+    if has('unix')
+        if executable('xclip') && !empty($DISPLAY)
+            fun! CopyToClipboard(text)
+                silent! call system('xclip -in -sel clipboard', a:text)
+            endfun
+            fun! SyncClipboard()
+                let @z = system('xclip -out -sel clipboard')
+            endfun
+        elseif executable('wl-copy') && !empty($WAYLAND_DISPLAY)
+            fun! CopyToClipboard(text)
+                silent! call system('wl-copy', a:text)
+            endfun
+            fun! SyncClipboard()
+                let @z = system('wl-paste')
+                if count(@z, nr2char(10)) == 1
+                    let @z = trim(@z, nr2char(10), 2)
+                else
+                    let @z = trim(@z, nr2char(10), 2) . nr2char(10)
+                endif
+            endfun
+        endif
+    endif
+endif
+" 1}}}
+" Swap files {{{1
 let s:swapdir = expand(!has('nvim') ? '~/.vimswap' : '~/.config/nvim/swap')
 if !isdirectory(fnamemodify(s:swapdir, ':p'))
     if exists('*mkdir')
@@ -90,8 +145,8 @@ else
         call setfperm(fnamemodify(s:swapdir, ':p'), 'rwx------')
     endif
 endif
-" }}}
-" Persistent undo {{{
+" 1}}}
+" Persistent undo {{{1
 let s:undodir = expand(!has('nvim') ? '~/.vimundo' : '~/.config/nvim/undo')
 if has('persistent_undo')
     if !isdirectory(fnamemodify(s:undodir, ':p'))
@@ -115,21 +170,8 @@ else
     echom 'Vim not compiled with +persistent_undo. Persistent undo disabled.'
     echohl None
 endif
-" }}}
-" Delete surrounding (ds) {{{
-nnoremap <silent><expr> ds 'di' . nr2char(getchar()) . 'vhp'
-" }}}
-" Ranger integration {{{
-if exists('$RANGER_LEVEL')
-    nmap q <cmd>q<CR>
-endif "}}}
-" GetHiGroup - Get higlight group of the character under cursor {{{
-fun! GetHiGroup()
-    return synIDattr(synID(line('.'), col('.'), 1), 'name')
-endfun
-command! GetHiGroup echo GetHiGroup()
-"}}}
-" Show Trailing Spaces {{{
+" 1}}}
+" Show Trailing Spaces {{{1
 " hi TrailingWhitespace term=standout ctermfg=red ctermbg=red guifg=red guibg=red
 hi link TrailingWhitespace Error
 let w:trailing_whitespace = matchadd('TrailingWhitespace', '\s\+$')
@@ -160,11 +202,11 @@ au TrailingWhitespace FileType *
             \ if (index(g:TrailingWhitespaceExcludedFileTypes, &l:filetype) != -1) |
             \ exe 'au TrailingWhitespace BufWinEnter <buffer> TrailingWhitespace' |
             \ endif
-" }}}
-" Colorcolumn customizations {{{
+" 1}}}
+" Colorcolumn customizations {{{1
 command! ColorColumnToggle       call ColorColumnToggle(1)
 command! ColorColumnToggleGlobal call ColorColumnToggle(0)
-fun! ColorColumnToggle(local) "{{{
+fun! ColorColumnToggle(local) "{{{2
     if a:local
         if &l:colorcolumn == ''
             let &l:colorcolumn = '+'.join(range(1,200),',+')
@@ -178,15 +220,15 @@ fun! ColorColumnToggle(local) "{{{
             let &colorcolumn = ''
         endif
     endif
-endfun "}}}
+endfun "2}}}
 aug MyCustomColorColumn
     au!
     au BufEnter * if &ft =~ 'gitcommit\|vim'
                 \| let &l:colorcolumn = '+'.join(range(1,200),',+')
                 \| endif
 aug END
-" }}}
-" My Commentor {{{
+" 1}}}
+" My Commentor {{{1
 map gc <Plug>(MyCommentor)
 map gcc gcl
 
@@ -194,7 +236,7 @@ map gcc gcl
 " map gcu <Plug>(My-Un-Commenter)
 map gct <Plug>(My-Comment-Toggler)
 
-" Implementation {{{
+" Implementation {{{2
 fun! MyCommenterHelper() "{{{
     " if comments like #python
     if &l:cms =~ '\v^.*\%s$'
@@ -270,41 +312,9 @@ nmap <Plug>(MyCommentor)
             \<cmd>let g:MyCommentor_saved_opfunc=&opfunc<CR>
             \<cmd>setl opfunc=MyCommentorOpFunc<CR>g@
 vmap <Plug>(MyCommentor) <ESC>'<<Plug>(MyCommentor)'>
-"}}}
-"}}}
-" Copy to clipboard {{{
-if !(has('xterm_clipboard') && has('unnamedplus')) " use <leader>y
-    noremap <leader>y <cmd>call SyncClipboard()<CR>"z
-    aug YankToClipboard
-        au!
-        au TextYankPost * if v:event.regname ==# 'z' | call CopyToClipboard(
-                    \join(v:event.regcontents, "\n"))| endif
-    aug END
-    if has('unix')
-        if executable('xclip') && !empty($DISPLAY)
-            fun! CopyToClipboard(text)
-                silent! call system('xclip -in -sel clipboard', a:text)
-            endfun
-            fun! SyncClipboard()
-                let @z = system('xclip -out -sel clipboard')
-            endfun
-        elseif executable('wl-copy') && !empty($WAYLAND_DISPLAY)
-            fun! CopyToClipboard(text)
-                silent! call system('wl-copy', a:text)
-            endfun
-            fun! SyncClipboard()
-                let @z = system('wl-paste')
-                if count(@z, nr2char(10)) == 1
-                    let @z = trim(@z, nr2char(10), 2)
-                else
-                    let @z = trim(@z, nr2char(10), 2) . nr2char(10)
-                endif
-            endfun
-        endif
-    endif
-endif
-" }}}
-" Terminal quirks {{{
+"2}}}
+"1}}}
+" Terminal quirks {{{1
 " Bracketed paste support
 if $TERM =~ 'alacritty\|foot\|st-256color'
     let &t_BE = "\<Esc>[?2004h"
@@ -345,11 +355,16 @@ endif
 " bce in their terminfo files). This causes incorrect background rendering
 " when using a colorscheme with a non-transparent background.
 set t_ut=
-"}}}
+"1}}}
 
-" neovim-specific config {{{
+" neovim-specific config {{{1
 if has('nvim')
     unmap Y
+    if $TERM =~ 'foot\|alacritty'
+        set termguicolors
+        au UIEnter * ++once call timer_start(0,
+                    \{->execute("colo PaperColor")})
+    endif
     if !empty(exepath('python3')) || (!empty(exepath('python')) &&
                 \system('python -c "import sys; print(sys.version_info.major)"') ==# '3')
         let s:python3exe = !empty(exepath('python3')) ? exepath('python3') : exepath('python')
@@ -366,7 +381,7 @@ if has('nvim')
         let $PATH = fnamemodify(g:python3_host_prog, ':p:h') . ':' . $PATH
     endif
 endif
-"}}}
+"1}}}
 
 let s:autoloaddir = expand((!has('nvim') ? '~/.vim' : '~/.config/nvim') . '/autoload')
 if !empty(glob(s:autoloaddir . '/plug.vim'))
@@ -422,9 +437,10 @@ Plug 'airblade/vim-gitgutter', {'on': []}   " Git diff
 " snippets
 if has('nvim') || has ('python3')
     Plug 'SirVer/ultisnips'
-    let g:UltiSnipsExpandTrigger="<tab>"
-    let g:UltiSnipsJumpForwardTrigger="<c-b>"
-    let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+    Plug 'honza/vim-snippets'
+    let g:UltiSnipsExpandTrigger = "<tab>"
+    let g:UltiSnipsJumpForwardTrigger = "<tab>"
+    let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 endif
 
 " undotree
@@ -454,7 +470,7 @@ Plug 'ojroques/vim-oscyank'
 " Neovim-specific
 if has('nvim')
     Plug 'neovim/nvim-lspconfig'
-    Plug 'ms-jpq/coq_nvim'
+    " Plug 'ms-jpq/coq_nvim'
     let g:coq_settings = {
                 \ 'auto_start': 'shut-up',
                 \ 'display.icons.mode': 'none',
@@ -527,13 +543,6 @@ endif
 ""      names are - vimswapdiff
 
 "2}}}
-"}}}
-if has('nvim') "{{{
-    if $TERM == 'foot'
-        set termguicolors
-        colo gruvbox-material
-    endif
-endif
 "}}}
 
 " vim:et:ts=4:sts=4:sw=0:fdm=marker
