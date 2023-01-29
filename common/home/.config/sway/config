@@ -8,10 +8,9 @@
 exec exec wlsunset -l 26.1 -L 91.7
 exec_always {
     exec foot --server
-    pgrep pipewire                  || exec pipewire
-    pgrep pipewire-pulse            || exec pipewire-pulse
-    pgrep pipewire-media-session    || exec pipewire-media-session
-    # pgrep wireplumber               || exec wireplumber
+    pkill pipewire       ; exec pipewire
+    pkill pipewire-pulse ; exec pipewire-pulse
+    pkill wireplumber    ; exec wireplumber
 }
 
 ### Variables
