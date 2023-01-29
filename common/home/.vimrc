@@ -353,10 +353,21 @@ Plug 'airblade/vim-gitgutter', {'on': []}   " Git diff
 if has('nvim') || has ('python3')
     Plug 'SirVer/ultisnips'
     Plug 'honza/vim-snippets'
-    let g:UltiSnipsExpandTrigger = "<tab>"
-    let g:UltiSnipsJumpForwardTrigger = "<tab>"
-    let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+    let g:UltiSnipsExpandTrigger = '<tab>'
+    let g:UltiSnipsJumpForwardTrigger = '<tab>'
+    let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+else
+    Plug 'hrsh7th/vim-vsnip'
+    Plug 'rafamadriz/friendly-snippets'
+    imap <expr> <Tab>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<Tab>'
+    smap <expr> <Tab>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<Tab>'
+    imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
+    smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
 endif
+
+" latex
+Plug 'lervag/vimtex'
+    let g:vimtex_view_method = 'zathura'
 
 " undotree
 Plug 'mbbill/undotree', {'on': 'UndotreeToggle'}
