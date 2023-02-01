@@ -102,8 +102,8 @@ input "type:touchpad" {
     middle_emulation enabled
 }
 input "2:14:ETPS/2_Elantech_TrackPoint" {
-    accel_profile flat
-    pointer_accel 0.5
+    accel_profile adaptive
+    pointer_accel -0.2
 }
 
 ### Key bindings
