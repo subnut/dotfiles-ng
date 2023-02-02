@@ -105,6 +105,9 @@ input "2:14:ETPS/2_Elantech_TrackPoint" {
     accel_profile adaptive
     pointer_accel -0.2
 }
+input type:keyboard {
+    xkb_layout us,in(eng)
+}
 
 ### Key bindings
 #

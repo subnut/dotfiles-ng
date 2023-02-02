@@ -24,6 +24,7 @@ window#waybar {
 
 /* Paddings */
 #idle_inhibitor,
+#language,
 #network,
 #pulseaudio,
 #battery,
@@ -40,6 +41,11 @@ window#waybar {
 }
 #idle_inhibitor.activated {
   background: red;
+  color: black;
+}
+
+#language {
+  background: #76F;
   color: black;
 }
 

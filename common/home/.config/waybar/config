@@ -8,6 +8,7 @@
   ],
   "modules-right": [
     "idle_inhibitor",
+    "sway/language",
     "network#wifi",
     "pulseaudio#mic",
     "pulseaudio",
@@ -15,6 +16,15 @@
     "clock#date",
     "clock#time"
   ],
+  "sway/language": {
+    // "format": " {short}",
+    // "format-alt": " {short}/{shortDescription} ({variant})",
+    "format": "{short}",
+    // "format-alt": "{short}/{shortDescription} ({variant})",
+    // "on-click-right": "swaymsg input type:keyboard xkb_switch_layout next",
+    "on-click": "swaymsg input type:keyboard xkb_switch_layout next",
+    "tooltip-format": "{long}"
+  },
   "sway/workspaces": {
     "disable-scroll": true
   },
@@ -97,4 +107,4 @@
     "tooltip-format": "interface: {ifname}\nipaddr: {ipaddr}\ngateway: {gwaddr}\nsubnet mask: {cidr}\nstrength: {signalStrength}% ({signaldBm} dB)"
   }
 }
-// vim: nowrap et ts=2 sts=2 sw=2 ft=jsonc
+// vim: nowrap et ts=2 sts=2 sw=2 ft=jsonc cms=//\ %s
