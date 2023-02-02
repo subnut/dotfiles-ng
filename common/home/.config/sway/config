@@ -5,13 +5,20 @@
 # Read `man 5 sway` for a complete reference.
 
 ### Startup stuff?
-exec exec wlsunset -l 26.1 -L 91.7
-exec_always {
+exec {
+    exec wlsunset -l 26.1 -L 91.7
     exec foot --server
+    playerctld daemon
     pkill pipewire       ; exec pipewire
     pkill pipewire-pulse ; exec pipewire-pulse
     pkill wireplumber    ; exec wireplumber
 }
+# exec_always {
+#     exec foot --server
+#     pkill pipewire       ; exec pipewire
+#     pkill pipewire-pulse ; exec pipewire-pulse
+#     pkill wireplumber    ; exec wireplumber
+# }
 
 ### Variables
 #
@@ -127,6 +134,24 @@ bindsym XF86AudioLowerVolume nop
 bindsym XF86AudioRaiseVolume nop
 bindsym XF86AudioMute        nop
 bindsym XF86AudioMicMute     nop
+
+## TODO
+bindsym XF86AudioPrev nop
+bindsym XF86AudioNext nop
+bindsym XF86AudioPlay nop
+
+## ThinkPad E14G3
+bindsym XF86Favorites   exec playerctl play-pause
+bindsym XF86PickupPhone exec playerctl previous
+bindsym XF86HangupPhone exec playerctl next
+bindsym Shift+XF86PickupPhone exec playerctld unshift
+bindsym Shift+XF86HangupPhone exec playerctld shift
+bindsym Shift+XF86Favorites   exec playerctl -a pause
+
+#
+# Applications:
+#
+bindsym $mod+Ctrl+f exec firefox
 
 #
 # Basics:
