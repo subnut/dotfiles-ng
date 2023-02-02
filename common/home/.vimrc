@@ -350,20 +350,12 @@ Plug 'airblade/vim-gitgutter', {'on': []}   " Git diff
     hi GitGutterDelete  ctermfg=1
 
 " snippets
-if has('nvim') || has ('python3')
-    Plug 'SirVer/ultisnips'
-    Plug 'honza/vim-snippets'
-    let g:UltiSnipsExpandTrigger = '<tab>'
-    let g:UltiSnipsJumpForwardTrigger = '<tab>'
-    let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
-else
-    Plug 'hrsh7th/vim-vsnip'
-    Plug 'rafamadriz/friendly-snippets'
+Plug 'hrsh7th/vim-vsnip'
+Plug 'rafamadriz/friendly-snippets'
     imap <expr> <Tab>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<Tab>'
     smap <expr> <Tab>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<Tab>'
     imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
     smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-endif
 
 " latex
 Plug 'lervag/vimtex'
@@ -395,16 +387,13 @@ Plug 'ojroques/vim-oscyank'
 
 " Neovim-specific
 if has('nvim')
+    Plug 'subnut/nvim-ghost.nvim', #{do:':call nvim_ghost#installer#install()'}
+    Plug 'windwp/nvim-autopairs'
     Plug 'neovim/nvim-lspconfig'
-    " Plug 'ms-jpq/coq_nvim'
-    let g:coq_settings = {
-                \ 'auto_start': 'shut-up',
-                \ 'display.icons.mode': 'none',
-                \ 'keymap.recommended': v:true,
-                \ 'completion.always': v:true,
-                \ 'display.pum.fast_close': v:false,
-                \ 'limits.completion_auto_timeout': 1,
-                \}
+    Plug 'hrsh7th/nvim-cmp'
+        Plug 'hrsh7th/cmp-nvim-lsp'
+        Plug 'hrsh7th/cmp-buffer'
+        Plug 'hrsh7th/cmp-vsnip'
 endif
 
 " Themes
@@ -456,6 +445,16 @@ endif
 "" Auto-close brackets (and quotes)
 " Plug 'itmammoth/doorboy.vim'    "`' () [] {}
 "     let g:doorboy_additional_brackets = #{c:['<>']}
+
+" Plug 'ms-jpq/coq_nvim'
+"     let g:coq_settings = {
+"                 \ 'auto_start': 'shut-up',
+"                 \ 'display.icons.mode': 'none',
+"                 \ 'keymap.recommended': v:true,
+"                 \ 'completion.always': v:true,
+"                 \ 'display.pum.fast_close': v:false,
+"                 \ 'limits.completion_auto_timeout': 1,
+"                 \}
 
 "" Show diff between swapfile and file on disk
 " Plug 'chrisbra/recover.vim'
