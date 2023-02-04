@@ -121,6 +121,7 @@ _save() {
     run save ~/.config/foot
     run save ~/.config/gtk-3.0
     run save ~/.config/htop
+    run save ~/.config/hypr
     run save ~/.config/lf
     run save ~/.config/sway
     run save ~/.config/swaylock
