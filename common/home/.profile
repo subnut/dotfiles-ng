@@ -12,14 +12,44 @@ exists ssh-agent && {
 }
 
 # Wayland WMs
-[ -z "$wm" ] && exists sway  && wm=sway
-[ -z "$wm" ] && exists river && wm=river
-printf '%s' "Run $wm? [Y/n] "; read ANSWER
-if [ -z "$ANSWER" ] || printf '%s' "$ANSWER" | grep -q '^[Yy]'; then
+wmselect() {
+  for wm in sway river Hyprland hyprland; do
+    if exists $wm; then
+      set -- "$@" $wm
+    fi
+  done
+  i=0
+  echo $i: '<none>'
+  for wm in "$@"; do
+    i=$(( i + 1 ))
+    echo $i: $wm
+  done
+  if [ $i -gt 0 ]; then
+    while true; do
+      printf %s "Choose your option [0-$i] [default=1]: "
+      read ANS
+      if [ -z "$ANS" ]; then
+        ANS=1
+        break
+      fi
+      if printf %s "$ANS" | grep -q "[0-$i]"; then
+        break
+      fi
+      echo Invalid input
+    done
+    unset -v i
+    if [ $ANS -eq 0 ]; then
+      return
+    else
+      eval "echo \${$ANS}"
+    fi
+  fi
+}
+wm=$(wmselect); unset -f wmselect
+if ! [ -z "$wm" ]; then
   export GDK_BACKEND=wayland
   export QT_QPA_PLATFORM=wayland  # needs qt5-wayland installed
-  exists firefox &&
-    export MOZ_ENABLE_WAYLAND=1
+  export MOZ_ENABLE_WAYLAND=1     # for firefox
   if exists dbus-run-session
     then dbus-run-session $wm
     else $wm
