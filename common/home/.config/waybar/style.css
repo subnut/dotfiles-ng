@@ -32,9 +32,13 @@ window#waybar {
 #clock              { padding: 0 0.4em;  }
 #clock.time         { padding: 0 0.3em;  }
 #workspaces button  { padding: 0 0.15em; }
+#tray               { padding: 0 0.3em; }
 
 
 /* Right modules */
+#tray {
+  background: #111;
+}
 #idle_inhibitor {
   background: #497;
   color: black;

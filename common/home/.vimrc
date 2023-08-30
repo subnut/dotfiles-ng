@@ -100,7 +100,7 @@ if !(has('xterm_clipboard') && has('unnamedplus')) " use <leader>y
     aug YankToClipboard
         au!
         au TextYankPost * if v:event.regname ==# 'z' | call CopyToClipboard(
-                    \join(v:event.regcontents, "\n"))| endif
+                    \join(v:event.regcontents, "\n")."\n")| endif
     aug END
     if has('unix')
         if executable('xclip') && !empty($DISPLAY)

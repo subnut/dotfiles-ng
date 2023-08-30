@@ -19,14 +19,16 @@ wmselect() {
     fi
   done
   i=0
-  echo $i: '<none>'
+  >&2 echo
+  >&2 echo $i: '<none>'
   for wm in "$@"; do
     i=$(( i + 1 ))
-    echo $i: $wm
+    >&2 echo $i: $wm
   done
   if [ $i -gt 0 ]; then
     while true; do
-      printf %s "Choose your option [0-$i] [default=1]: "
+      >&2 echo
+      >&2 printf %s "Choose your option [0-$i] [default=1]: "
       read ANS
       if [ -z "$ANS" ]; then
         ANS=1
@@ -35,7 +37,7 @@ wmselect() {
       if printf %s "$ANS" | grep -q "[0-$i]"; then
         break
       fi
-      echo Invalid input
+      >&2 echo Invalid input
     done
     unset -v i
     if [ $ANS -eq 0 ]; then

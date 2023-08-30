@@ -5,6 +5,7 @@
 	defaultBranch = main
 [push]
 	followTags = true
+	autoSetupRemote = true
 [blame]
 	coloring = repeatedLines
 [color "blame"]

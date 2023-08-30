@@ -1,12 +1,13 @@
 // Fontawesome is required for icons
 {
-  "ipc": true,
-  "height": 1,
+  "ipc": true, "id": "waybar",
+  "height": 0.1,
   "modules-left": [
     "sway/workspaces",
     "sway/mode"
   ],
   "modules-right": [
+    "tray",
     "idle_inhibitor",
     "sway/language",
     "network#wifi",
@@ -16,6 +17,11 @@
     "clock#date",
     "clock#time"
   ],
+  "tray": {
+    "reverse-direction": true,
+    "icon-size": 20,
+    "spacing": 5
+  },
   "sway/language": {
     // "format": " {short}",
     // "format-alt": " {short}/{shortDescription} ({variant})",
@@ -90,8 +96,9 @@
     "format-bluetooth": "{icon} {volume}%",
     "format-icons": {
       "headphones": "",
+      "headset": "",
       "handsfree": "", // Needs fontawesome5
-      "headset": "", // Needs fontawesome5
+      // "headset": "", // Needs fontawesome5
       "phone": "",
       "portable": "",
       "car": "",

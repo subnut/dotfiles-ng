@@ -1,0 +1,13 @@
+profile solo {
+	output eDP-1 enable
+}
+
+profile BenQ {
+	output eDP-1 disable
+	output "BNQ BenQ GW2480 ETA6L00444SL0" enable
+}
+
+profile Acer {
+	output eDP-1 disable
+	output "Acer Technologies HA220Q 0x0000B7B5" enable
+}

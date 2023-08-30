@@ -4,7 +4,8 @@ export GO111MODULE=auto
 
 alias :q=exit
 alias l='ls -lAF -h'
-alias l.='ls -dAF .*' # taken from /etc/profile.d/colorls.sh
+alias l.='ls -ldAF .*'
+alias ls.='ls -dAF .*'
 alias shrug="printf %s '¯\_(ツ)_/¯'"
 alias exists='command -v >/dev/null'
 
@@ -38,6 +39,37 @@ exists less && {
 exists zsh          && alias zshrc='$EDITOR $HOME/.zshrc'
 exists sway         && alias swayprop="$HOME/.config/sway/swayprop"
 exists ssh-agent    && alias withssh='SSH_AUTH_SOCK=$_SSH_AUTH_SOCK SSH_AGENT_PID=$_SSH_AGENT_PID'
+
+oldiff() {
+    [ $# -eq 1 ] || {
+        echo >&2 exactly one argument allowed
+        return 2
+    }
+    test -f "$1".old || { echo >&2 file not found: "$1.old" && return 127; }
+    test -f "$1"     || { echo >&2 file not found: "$1"     && return 127; }
+    diff -u "$1.old" "$1" |
+        sed '/^--- /s`'"$1"'.*$`a/'"$1"'`; /^+++ /s`'"$1"'.*$`b/'"$1"'`;'
+        # Assuming no pathname has a backtick in its name
+}
+
+
+# Function to switch sh
+swsh() {
+    [ $# -eq 1 ] || {
+        echo >&2 exactly one argument allowed
+        return 2
+    }
+    exists $1 || {
+        echo >&2 $1: command not found
+        return 127
+    }
+    exepath="$(command -v $1)"
+    [ -f "$exepath" ] && [ -x "$exepath" ] || {
+        echo >&2 not an executable: $exepath
+        return 1
+    }
+    ln -sf "$exepath" "$HOME/.local/bin/sh"
+}
 
 exists bat && {
     export BAT_THEME=ansi
@@ -221,8 +253,8 @@ battery() {
 exists abduco && {
     alias abduco=abduco_
     abduco_() {
-		[ $(ps p $(ps p $$ o ppid h) o comm h) = abduco ] && {
-			printf '%s "%s"\n' 'WARNING!!! This shell is already running under abduco session' \
+        [ $(ps p $(ps p $$ o ppid h) o comm h) = abduco ] && {
+            printf '%s "%s"\n' 'WARNING!!! This shell is already running under abduco session' \
             "$(
                 if [ -d /proc ] && false
                 then
@@ -231,7 +263,7 @@ exists abduco && {
                     tail -n +2 | sed -n '/^-/{h;d;};x;/^-e$/{x;h;d};g;p;q'
                 else
                     ps p $(ps p $$ o ppid h) o args h | awk '{match($0,'"$(
-                    for SOCKET in $HOME/.abduco/*; do
+                    for SOCKET in "$HOME"/.abduco/*; do
                         SOCKET=${SOCKET#$HOME/.abduco/};
                         SOCKET=${SOCKET%@*}
                         SOCKETS="${SOCKETS}${SOCKET}|"
@@ -251,15 +283,25 @@ exists abduco && {
             #
             # Also note that the arguments may be in any order, but the `name command [args ...]`
             # must always come last.
-			echo 'If you somehow accidentally end up attaching to a session from inside that session,'
-			echo 'you will create an infinite loop, inflicting stress on your machine.'
-			printf %s 'Are you sure you want to continue? [y/N] '; read ANSWER
-			if [ ! -z "$ANSWER" ] && printf %s "$ANSWER" | grep -q '^[Yy]'; then :;
-			else return;
-			fi
-		}
-		abduco "$@"
-	}
+            echo 'If you somehow accidentally end up attaching to a session from inside that session,'
+            echo 'you will create an infinite loop, inflicting stress on your machine.'
+            printf %s 'Are you sure you want to continue? [y/N] '; read ANSWER
+            if [ ! -z "$ANSWER" ] && printf %s "$ANSWER" | grep -q '^[Yy]'; then :;
+            else return;
+            fi
+        }
+        abduco "$@"
+    }
+}
+
+exists elogind-inhibit && {
+    nosleep() {
+        clear
+        echo Sleep inhibited.
+        echo Press ENTER to stop inhibition
+        elogind-inhibit --what=handle-lid-switch sed -n q
+        echo Sleep inhibition stopped.
+    }
 }
 
 true

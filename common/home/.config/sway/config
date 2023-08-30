@@ -4,39 +4,60 @@
 #
 # Read `man 5 sway` for a complete reference.
 
-### Startup stuff?
+### Startup stuff
+# Non-backgrounding
+exec exec {
+    kanshi
+    wl-paste --watch cliphist store
+    wlsunset -l 26.1 -L 91.7
+    foot --server
+    pipewire
+    pipewire-pulse
+    wireplumber
+    thunar --daemon
+    blueman-applet
+    udiskie
+    swaync
+}
+# Backgrounding
 exec {
-    exec wlsunset -l 26.1 -L 91.7
-    exec foot --server
     playerctld daemon
+    dbus-update-activation-environment WAYLAND_DISPLAY
+}
+# Run always
+exec_always {
+    kanshictl reload
     pkill pipewire       ; exec pipewire
     pkill pipewire-pulse ; exec pipewire-pulse
     pkill wireplumber    ; exec wireplumber
 }
-# exec_always {
-#     exec foot --server
-#     pkill pipewire       ; exec pipewire
-#     pkill pipewire-pulse ; exec pipewire-pulse
-#     pkill wireplumber    ; exec wireplumber
-# }
 
 ### Variables
-#
-# Logo key. Use Mod1 for Alt.
-set $mod Mod4
-set $alt Mod1
+set {
+    $super  Mod4
+    $alt    Mod1
 # Home row direction keys, like vim
-set $left h
-set $down j
-set $up k
-set $right l
+    $left   h
+    $down   j
+    $up     k
+    $right  l
 # Your preferred programs
-set $term exec footclient
-set $filemanager exec nautilus -w
+    $term       footclient
+    $screenshot slurp | grim -g- -s1 -l9 - | wl-copy
+    # $filemanager nautilus -w
+    $filemanager thunar
+# Selectors
+    $emoji  rofi-wayland -show emoji -emoji-mode stdout | tr -d '\n' | wtype -
+    $menu   rofi-wayland -show drun
+# Clipboard
+    $clipselect cliphist list | rofi-wayland -dmenu | cliphist decode | wl-copy
+    $clipdelete cliphist list | rofi-wayland -dmenu | cliphist delete
+}
+
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-set $menu dmenu_path | dmenu | xargs swaymsg exec --
+# set $menu dmenu_path | dmenu | xargs swaymsg exec --
 
 ### Cosmetics
 seat seat0 xcursor_theme capitaine-cursors 24
@@ -44,13 +65,14 @@ default_border normal 0
 titlebar_padding 5 1
 titlebar_border_thickness 0
 # font monospace 12
-font Recursive Sn Csl St 12
+# font Recursive Sn Csl St 12
+font pango:Recursive Sn Csl St 12
 client.focused #ffdd00 #ffdd00 #000000
 client.focused_inactive #cc5500 #cc5500 #000000
 client.unfocused #333333 #222222 #dddddd
 
 ### Configuration
-xwayland disable
+xwayland enable
 focus_wrapping workspace
 
 ### Output configuration
@@ -120,7 +142,7 @@ input type:keyboard {
 #
 # Misc.:
 #
-bindsym $mod+Ctrl+s sticky toggle
+bindsym $super+Ctrl+s sticky toggle
 bindsym XF86Display exec sleep 0.5 && pkill -USR1 swayidle
 
 ## Implemented in /etc/acpi/handler.sh
@@ -136,9 +158,10 @@ bindsym XF86AudioMute        nop
 bindsym XF86AudioMicMute     nop
 
 ## TODO
-bindsym XF86AudioPrev nop
-bindsym XF86AudioNext nop
-bindsym XF86AudioPlay nop
+bindsym XF86AudioPrev   exec playerctl previous
+bindsym XF86AudioNext   exec playerctl next
+bindsym XF86AudioPlay   exec playerctl play-pause
+bindsym XF86AudioPause  exec playerctl pause
 
 ## ThinkPad E14G3
 bindsym XF86Favorites   exec playerctl play-pause
@@ -151,35 +174,46 @@ bindsym Shift+XF86Favorites   exec playerctl -a pause
 #
 # Applications:
 #
-bindsym $mod+Ctrl+f exec firefox
+bindsym $super+Ctrl+f exec firefox
 
 #
 # Basics:
 #
     # Start a terminal
-    bindsym $mod+Return exec $term
+    bindsym $super+Return exec $term
 
     # Kill focused window
-    bindsym $mod+q kill
+    bindsym $super+q kill
 
     # Start your launcher
-    # bindsym $mod+d exec $menu     # $mod+d
+    # bindsym $super+d exec $menu
+    bindsym $super+r exec $menu
 
     # Start file manager
-    bindsym $mod+e exec $filemanager
+    bindsym $super+e exec $filemanager
 
-    # Drag floating windows by holding down $mod and left mouse button.
-    # Resize them with right mouse button + $mod.
+    # Clipboard
+    bindsym $super+v        exec $clipselect
+    bindsym $super+Shift+v  exec $clipdelete
+
+    # Screenshot
+    bindsym $super+Shift+s exec $screenshot
+
+    # Emoji
+    bindsym $super+semicolon exec $emoji
+
+    # Drag floating windows by holding down $super and left mouse button.
+    # Resize them with right mouse button + $super.
     # Despite the name, also works for non-floating windows.
     # Change normal to inverse to use left mouse button for resizing and right
     # mouse button for dragging.
-    floating_modifier $mod normal
+    floating_modifier $super normal
 
     # Reload the configuration file
-    bindsym $mod+$alt+r reload
+    bindsym $super+$alt+r reload
 
     # Exit sway (logs you out of your Wayland session)
-    bindsym $mod+$alt+q exec swaynag -e bottom -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
+    bindsym $super+$alt+q exec swaynag -e bottom -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
 #
 # Moving around:
 #
@@ -190,92 +224,92 @@ bindsym $mod+Ctrl+f exec firefox
     # bindsym $alt+tab focus next
 
     # Move your focus around
-    bindsym $mod+$left focus left
-    bindsym $mod+$down focus down
-    bindsym $mod+$up focus up
-    bindsym $mod+$right focus right
-    # Or use $mod+[up|down|left|right]
-    bindsym $mod+Left focus left
-    bindsym $mod+Down focus down
-    bindsym $mod+Up focus up
-    bindsym $mod+Right focus right
+    bindsym $super+$left focus left
+    bindsym $super+$down focus down
+    bindsym $super+$up focus up
+    bindsym $super+$right focus right
+    # Or use $super+[up|down|left|right]
+    bindsym $super+Left focus left
+    bindsym $super+Down focus down
+    bindsym $super+Up focus up
+    bindsym $super+Right focus right
 
     # Move the focused window with the same, but add Shift
-    bindsym $mod+Shift+$left move left
-    bindsym $mod+Shift+$down move down
-    bindsym $mod+Shift+$up move up
-    bindsym $mod+Shift+$right move right
+    bindsym $super+Shift+$left move left
+    bindsym $super+Shift+$down move down
+    bindsym $super+Shift+$up move up
+    bindsym $super+Shift+$right move right
     # Ditto, with arrow keys
-    bindsym $mod+Shift+Left move left
-    bindsym $mod+Shift+Down move down
-    bindsym $mod+Shift+Up move up
-    bindsym $mod+Shift+Right move right
+    bindsym $super+Shift+Left move left
+    bindsym $super+Shift+Down move down
+    bindsym $super+Shift+Up move up
+    bindsym $super+Shift+Right move right
 #
 # Workspaces:
 #
     # Switch to workspace
-    bindsym $mod+Tab workspace next
-    bindsym $mod+Shift+Tab workspace prev
-    bindsym $mod+Grave workspace back_and_forth
-    bindsym $mod+1 workspace number 1
-    bindsym $mod+2 workspace number 2
-    bindsym $mod+3 workspace number 3
-    bindsym $mod+4 workspace number 4
-    bindsym $mod+5 workspace number 5
-    bindsym $mod+6 workspace number 6
-    bindsym $mod+7 workspace number 7
-    bindsym $mod+8 workspace number 8
-    bindsym $mod+9 workspace number 9
-    bindsym $mod+0 workspace number 10
+    bindsym $super+Tab workspace next
+    bindsym $super+Shift+Tab workspace prev
+    bindsym $super+Grave workspace back_and_forth
+    bindsym $super+1 workspace number 1
+    bindsym $super+2 workspace number 2
+    bindsym $super+3 workspace number 3
+    bindsym $super+4 workspace number 4
+    bindsym $super+5 workspace number 5
+    bindsym $super+6 workspace number 6
+    bindsym $super+7 workspace number 7
+    bindsym $super+8 workspace number 8
+    bindsym $super+9 workspace number 9
+    bindsym $super+0 workspace number 10
     # Move focused container to workspace
-    bindsym $mod+Shift+Grave move workspace back_and_forth
-    bindsym $mod+Shift+1 move container to workspace number 1
-    bindsym $mod+Shift+2 move container to workspace number 2
-    bindsym $mod+Shift+3 move container to workspace number 3
-    bindsym $mod+Shift+4 move container to workspace number 4
-    bindsym $mod+Shift+5 move container to workspace number 5
-    bindsym $mod+Shift+6 move container to workspace number 6
-    bindsym $mod+Shift+7 move container to workspace number 7
-    bindsym $mod+Shift+8 move container to workspace number 8
-    bindsym $mod+Shift+9 move container to workspace number 9
-    bindsym $mod+Shift+0 move container to workspace number 10
+    bindsym $super+Shift+Grave move workspace back_and_forth
+    bindsym $super+Shift+1 move container to workspace number 1
+    bindsym $super+Shift+2 move container to workspace number 2
+    bindsym $super+Shift+3 move container to workspace number 3
+    bindsym $super+Shift+4 move container to workspace number 4
+    bindsym $super+Shift+5 move container to workspace number 5
+    bindsym $super+Shift+6 move container to workspace number 6
+    bindsym $super+Shift+7 move container to workspace number 7
+    bindsym $super+Shift+8 move container to workspace number 8
+    bindsym $super+Shift+9 move container to workspace number 9
+    bindsym $super+Shift+0 move container to workspace number 10
     # Note: workspaces can have any name you want, not just numbers.
     # We just use 1-10 as the default.
 #
 # Layout stuff:
 #
     # You can "split" the current object of your focus with
-    # $mod+b or $mod+v, for horizontal and vertical splits
+    # $super+b or $super+v, for horizontal and vertical splits
     # respectively.
-    bindsym $mod+$alt+$up splitv
-    bindsym $mod+$alt+$down splitv
-    bindsym $mod+$alt+$left splith
-    bindsym $mod+$alt+$right splith
-    bindsym $mod+$alt+Up splitv
-    bindsym $mod+$alt+Down splitv
-    bindsym $mod+$alt+Left splith
-    bindsym $mod+$alt+Right splith
+    bindsym $super+$alt+$up splitv
+    bindsym $super+$alt+$down splitv
+    bindsym $super+$alt+$left splith
+    bindsym $super+$alt+$right splith
+    bindsym $super+$alt+Up splitv
+    bindsym $super+$alt+Down splitv
+    bindsym $super+$alt+Left splith
+    bindsym $super+$alt+Right splith
 
     # Set default layout
     workspace_layout tabbed
 
     # Switch the current container between different layout styles
-    bindsym $mod+t layout tabbed                    # Enter tabbed layout
-    bindsym $mod+d layout toggle split              # Enter split layout / Toggle split direction
-    bindsym $mod+s layout toggle stacking tabbed    # Cycle between stacking and tabbed modes
+    bindsym $super+t layout tabbed                    # Enter tabbed layout
+    bindsym $super+d layout toggle split              # Enter split layout / Toggle split direction
+    bindsym $super+s layout toggle stacking tabbed    # Cycle between stacking and tabbed modes
 
     # Make the current focus fullscreen
-    bindsym $mod+f fullscreen
+    bindsym $super+f fullscreen
 
     # Toggle the current focus between tiling and floating mode
-    bindsym $mod+Shift+space floating toggle
+    bindsym $super+Shift+space floating toggle
 
     # Swap focus between the tiling area and the floating area
-    bindsym $mod+space focus mode_toggle
+    bindsym $super+space focus mode_toggle
 
     # Move focus to the parent container
-    bindsym $mod+p focus parent
-    bindsym $mod+n focus child
+    bindsym $super+p focus parent
+    bindsym $super+n focus child
 #
 # Scratchpad:
 #
@@ -283,11 +317,11 @@ bindsym $mod+Ctrl+f exec firefox
     # You can send windows there and get them back later.
 
     # Move the currently focused window to the scratchpad
-    bindsym $mod+Shift+minus move scratchpad
+    bindsym $super+Shift+minus move scratchpad
 
     # Show the next scratchpad window or hide the focused scratchpad window.
     # If there are multiple scratchpad windows, this command cycles through them.
-    bindsym $mod+minus scratchpad show
+    bindsym $super+minus scratchpad show
 #
 # Resizing containers:
 #
@@ -322,32 +356,32 @@ mode "resize" {
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
-bindsym $mod+r mode "resize"
+bindsym $super+Ctrl+r mode "resize"
 
 
 #
 # Focusing different outputs
 #
-bindsym $mod+Ctrl+$left  focus output left
-bindsym $mod+Ctrl+$down  focus output down
-bindsym $mod+Ctrl+$up    focus output up
-bindsym $mod+Ctrl+$right focus output right
-bindsym $mod+Ctrl+Left   focus output left
-bindsym $mod+Ctrl+Down   focus output down
-bindsym $mod+Ctrl+Up     focus output up
-bindsym $mod+Ctrl+Right  focus output right
+bindsym $super+Ctrl+$left  focus output left
+bindsym $super+Ctrl+$down  focus output down
+bindsym $super+Ctrl+$up    focus output up
+bindsym $super+Ctrl+$right focus output right
+bindsym $super+Ctrl+Left   focus output left
+bindsym $super+Ctrl+Down   focus output down
+bindsym $super+Ctrl+Up     focus output up
+bindsym $super+Ctrl+Right  focus output right
 
 #
 # Moving containers to different outputs
 #
-bindsym $mod+Ctrl+Shift+$left  move workspace to output left
-bindsym $mod+Ctrl+Shift+$down  move workspace to output down
-bindsym $mod+Ctrl+Shift+$up    move workspace to output up
-bindsym $mod+Ctrl+Shift+$right move workspace to output right
-bindsym $mod+Ctrl+Shift+Left   move workspace to output left
-bindsym $mod+Ctrl+Shift+Down   move workspace to output down
-bindsym $mod+Ctrl+Shift+Up     move workspace to output up
-bindsym $mod+Ctrl+Shift+Right  move workspace to output right
+bindsym $super+Ctrl+Shift+$left  move workspace to output left
+bindsym $super+Ctrl+Shift+$down  move workspace to output down
+bindsym $super+Ctrl+Shift+$up    move workspace to output up
+bindsym $super+Ctrl+Shift+$right move workspace to output right
+bindsym $super+Ctrl+Shift+Left   move workspace to output left
+bindsym $super+Ctrl+Shift+Down   move workspace to output down
+bindsym $super+Ctrl+Shift+Up     move workspace to output up
+bindsym $super+Ctrl+Shift+Right  move workspace to output right
 
 
 #
@@ -384,10 +418,18 @@ bar {
 #
 for_window {
     [app_id="pavucontrol"] floating enable
-    [app_id="firefox" title="Firefox — Sharing Indicator"] floating enable
-    [app_id="firefox" title="Picture-in-Picture"] {
+    [app_id="Firefox" title="Firefox — Sharing Indicator"] {
+        floating enable
+        border none
+    }
+    [app_id="Firefox" title="Picture-in-Picture"] {
         floating enable
         sticky enable
+        border none
+    }
+    [app_id="thunar" title="File Operation Progress"] {
+        floating enable
+        border none
     }
 }
 

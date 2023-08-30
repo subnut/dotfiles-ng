@@ -119,7 +119,6 @@ _save() {
     run save ~/.config/bat
     run save ~/.config/fontconfig
     run save ~/.config/foot
-    run save ~/.config/gtk-3.0
     run save ~/.config/htop
     run save ~/.config/hypr
     run save ~/.config/lf
@@ -127,6 +126,7 @@ _save() {
     run save ~/.config/swaylock
     run save ~/.config/waybar
     run save ~/.config/zathura
+    run save ~/.config/kanshi
 
     run save ~/.config/nvim/init.lua
 

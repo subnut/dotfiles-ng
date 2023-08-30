@@ -8,7 +8,7 @@
 
 # Turn off bluetooth
 # NOTE: `bluetooth` is provided by TLP (thinkpad battery mgmt package)
-command -v bluetooth >/dev/null 2>&1 && bluetooth off
+# command -v bluetooth >/dev/null 2>&1 && bluetooth off
 
 # https://gitlab.com/ddcci-driver-linux/ddcci-driver-linux
 # xbps-install ddcci-dkms

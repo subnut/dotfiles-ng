@@ -14,6 +14,8 @@ set incremental-search true
 set scrollbar-bg rgba(0,0,0,0)
 set statusbar-bg rgba(0,0,0,0.5)
 set guioptions vh
+set recolor-keephue true
+# set recolor true
 
 # rice
 set notification-warning-bg "#eecc00"

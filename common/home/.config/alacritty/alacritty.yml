@@ -77,7 +77,7 @@ colorschemes: #[1
 
 live_config_reload: true
 font: *Rec-Mono-Custom
-colors: *urxvt
+colors: *iceberg-light
 
 key_bindings:
   - key: N
